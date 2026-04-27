@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,8 +99,11 @@ JWT_REFRESH_COOKIE_NAME = 'refresh_token'
 
 JWT_COOKIE_SECURE = False  # True in production (HTTPS)
 JWT_COOKIE_HTTP_ONLY = True
-JWT_COOKIE_SAMESITE = 'Lax'
-CORS_ALLOW_ALL_ORIGINS = True
+JWT_COOKIE_SAMESITE = 'None'
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = 'accounts.User'
 
 
