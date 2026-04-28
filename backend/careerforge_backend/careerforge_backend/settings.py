@@ -99,7 +99,7 @@ JWT_REFRESH_COOKIE_NAME = 'refresh_token'
 
 JWT_COOKIE_SECURE = False  # True in production (HTTPS)
 JWT_COOKIE_HTTP_ONLY = True
-JWT_COOKIE_SAMESITE = 'None'
+JWT_COOKIE_SAMESITE = 'Lax'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]

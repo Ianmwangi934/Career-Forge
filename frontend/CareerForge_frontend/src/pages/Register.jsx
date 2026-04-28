@@ -27,7 +27,7 @@ const Register = () => {
             )
             //console.log(response.data)
             // Redirect after success
-            navigate("/")
+            navigate("/dashboard")
         }
 
         catch (error) {

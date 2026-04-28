@@ -24,7 +24,7 @@ const Login = () => {
                 }
             )
             console.log(response.data)
-            navigate("/")
+            navigate("/dashboard")
 
         } catch (error) {
             console.error(error.response?.data || error.message)
