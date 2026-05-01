@@ -18,9 +18,15 @@ from django.contrib import admin
 from django.urls import include,path
 from rest_framework_simplejwt.views import TokenRefreshView
 from accounts.views import LoginView
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include("accounts.urls")),
     path('api/login/', LoginView.as_view(), name='login'),
-    path('api/token/refresh/', TokenRefreshView.as_view())
+    path('api/token/refresh/', TokenRefreshView.as_view()),
+    path('resumes/', include("resumes.urls"))
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#if settings.DEBUG:
+    #urlpatterns +=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
