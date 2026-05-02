@@ -97,3 +97,25 @@
   font-size: 14px;
   line-height: 1.5;
 }
+
+
+
+
+.resume-item {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.preview {
+  width: 150px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #020617;
+}
+
+.resume-info {
+  display: flex;
+  flex-direction: column;
+}

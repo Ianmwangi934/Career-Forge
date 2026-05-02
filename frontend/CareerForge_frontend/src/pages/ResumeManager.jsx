@@ -1,13 +1,16 @@
 import "./ResumeManager.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Document, Page, pdfjs } from "react-pdf";
+import workerSrc from "pdfjs-dist/build/pdf.worker?url";
+pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
+
 
 const ResumeManager = () => {
     const [file, setFile] = useState(null)
     const [title, setTitle] = useState("")
     const [resumes, setResumes] = useState([])
     const [loading, setLoading] = useState(false)
-
     // Fetch resumes
     const fetchResumes = async () => {
         try {
@@ -59,7 +62,11 @@ const ResumeManager = () => {
         } finally {
             setLoading(false)
         }
+        
     }
+
+    
+
 
     return (
         <div className="resume-manager">
@@ -102,12 +109,37 @@ const ResumeManager = () => {
         ) : (
           resumes.map((resume) => (
             <div key={resume.id} className="resume-item">
-              <p>
-                {resume.title || resume.file.split("/").pop()}
-              </p>
-              <span>
-                {new Date(resume.uploaded_at).toLocaleDateString()}
-              </span>
+
+              <div className="preview">
+                {(() => {
+                  if (!resume.file) return <p>No file</p>
+
+                  const fileUrl = resume.file.startsWith("http")
+                    ? resume.file
+                    : `http://localhost:8000${resume.file}`
+
+                  if (!fileUrl.endsWith(".pdf")) {
+                    return <p>Preview not available</p>
+                  }
+
+                  return (
+                    <Document
+                      file={fileUrl}
+                      onLoadError={(err) => console.error("PDF load error:", err)}
+                    >
+                      <Page pageNumber={1} width={150} />
+                    </Document>
+                  )
+                })()}
+              </div>
+
+              <div className="resume-info">
+                <p>{resume.title || resume.file.split("/").pop()}</p>
+                <span>
+                  {new Date(resume.uploaded_at).toLocaleDateString()}
+                </span>
+              </div>
+
             </div>
           ))
         )}
