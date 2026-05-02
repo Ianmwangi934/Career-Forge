@@ -51,8 +51,22 @@
 
 .resume-list h2 {
   margin-bottom: 15px;
+  color: #38bdf8; /* matches your brand accent */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: relative;
 }
 
+/* subtle underline accent */
+.resume-list h2::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: #38bdf8;
+  margin-top: 6px;
+  border-radius: 2px;
+}
 .resume-item {
   background: #0f172a;
   padding: 15px;
@@ -118,4 +132,41 @@
 .resume-info {
   display: flex;
   flex-direction: column;
+}
+
+
+
+.resume-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.view-btn,
+.download-btn,
+.delete-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+
+/* View */
+.view-btn {
+  background: #22c55e;
+  color: black;
+}
+
+/* Download */
+.download-btn {
+  background: #38bdf8;
+  color: black;
+}
+
+/* Delete */
+.delete-btn {
+  background: #ef4444;
+  color: white;
 }

@@ -64,6 +64,17 @@ const ResumeManager = () => {
         }
         
     }
+    const handleDelete = async (id) => {
+      try {
+        await axios.delete(
+          `http://localhost:8000/resumes/${id}/delete/`,
+          {withCredentials:true}
+        )
+        fetchResumes()
+      } catch (err) {
+        console.error("Delete failed:", err)
+      }
+    }
 
     
 
@@ -123,12 +134,14 @@ const ResumeManager = () => {
                   }
 
                   return (
-                    <Document
-                      file={fileUrl}
-                      onLoadError={(err) => console.error("PDF load error:", err)}
-                    >
-                      <Page pageNumber={1} width={150} />
-                    </Document>
+                    <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                      <Document
+                        file={fileUrl}
+                        onLoadError={(err) => console.error("PDF load error:", err)}
+                      >
+                        <Page pageNumber={1} width={150} />
+                      </Document>
+                    </a>
                   )
                 })()}
               </div>
@@ -138,9 +151,39 @@ const ResumeManager = () => {
                 <span>
                   {new Date(resume.uploaded_at).toLocaleDateString()}
                 </span>
+
+                {/* 🔥 NEW ACTIONS */}
+                <div className="resume-actions">
+
+                  <a
+                    href={`http://localhost:8000${resume.file}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="view-btn"
+                  >
+                    View
+                  </a>
+
+                  <a
+                    href={`http://localhost:8000${resume.file}`}
+                    download
+                    className="download-btn"
+                  >
+                    Download
+                  </a>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(resume.id)}
+                  >
+                    Delete
+                  </button>
+
+                </div>
               </div>
 
             </div>
+
           ))
         )}
 
