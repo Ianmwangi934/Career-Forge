@@ -108,7 +108,7 @@ const ResumeManager = () => {
       {/* LIST */}
       <div className="resume-list">
 
-        <h2>Your Resumes</h2>
+        <h2>Your  Uploaded Resume Version</h2>
 
         {resumes.length === 0 ? (
           <div className="empty-state">
