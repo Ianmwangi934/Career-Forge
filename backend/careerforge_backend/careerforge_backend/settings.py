@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'corsheaders',
+    'job_applications',
     'resumes',
     'accounts',
     'django.contrib.admin',
