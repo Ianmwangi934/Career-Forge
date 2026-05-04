@@ -2,6 +2,7 @@ import "./Dashboard.css"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import ResumeManager from "./ResumeManager";
+import JobTargetForm from "./JobTargetForm";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null)
@@ -52,7 +53,8 @@ const Dashboard = () => {
           </button>
 
           <button
-            className="nav-item"
+            className={`nav-item ${activeSection === "ai" ? "active" : ""}`}
+            onClick={() => setActiveSection("ai")}
           >
             AI Tools
           </button>
@@ -105,7 +107,7 @@ const Dashboard = () => {
                 <div className="card">
                   <h3>🧠 AI Tools</h3>
                   <p>Generate resumes, cover letters, and prep.</p>
-                  <button>Use AI</button>
+                  <button onClick={() => setActiveSection("ai")}>Use AI</button>
                 </div>
 
               </div>
@@ -113,6 +115,7 @@ const Dashboard = () => {
           )}
 
           {activeSection === "resumes" && <ResumeManager />}
+          {activeSection === "ai" && <JobTargetForm />}
 
         </div>
 

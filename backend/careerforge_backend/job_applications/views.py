@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions
-from .models import JobAppliaction
+from .models import JobApplication
 from .serializers import JobApplicationSerializer
 from rest_framework.permissions import IsAuthenticated
 
