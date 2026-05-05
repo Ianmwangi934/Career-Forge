@@ -26,7 +26,8 @@ urlpatterns = [
     path('api/login/', LoginView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('resumes/', include("resumes.urls")),
-    path('job_applications/', include("job_applications.urls"))
+    path('job_applications/', include("job_applications.urls")),
+    path('ai_engine/', include("ai_engine.urls"))
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #if settings.DEBUG:
