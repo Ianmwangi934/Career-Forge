@@ -1,6 +1,7 @@
 import "./JobTargetForm.css";
 import { useState } from "react";
 import axios from "axios";
+import AIQuestionCard from "./AIQuestionCard";
 
 const JobTargetForm = () => {
     const [form, setForm] = useState({
@@ -10,6 +11,8 @@ const JobTargetForm = () => {
         responsibilities:"",
         skills:"",
     })
+    const [aiQuestions, setAiQuestions] = useState(null)
+    const [generatedResume, setGeneratedResume] = useState(null)
 
     const [loading, setLoading] = useState(false)
 
@@ -33,7 +36,7 @@ const JobTargetForm = () => {
         try {
             setLoading(true)
 
-            await axios.post(
+            const res = await axios.post(
                 "http://localhost:8000/job_applications/",
                 form,
                 {withCredentials:true}
@@ -47,8 +50,21 @@ const JobTargetForm = () => {
                 skills:""
             })
 
-            // Future AI hook
-            alert("Job data saved. AI resume generation coming soon 🚀")
+            if (res.data.type === "questions") {
+
+                setAiQuestions({
+                    sessionId: res.data.session_id,
+                    questions: res.data.questions
+                })
+
+
+
+                } else {
+
+                setGeneratedResume(res.data)
+
+                alert("Resume generated successfully 🚀")
+                }
 
         } catch (err) {
             console.error("Submission failed:", err)
@@ -71,9 +87,9 @@ const JobTargetForm = () => {
 
                 <input
                 type="text"
-                name="job_title"
+                name="title"
                 placeholder="Job Title (e.g. Backend Developer)"
-                value={form.job_title}
+                value={form.title}
                 onChange={handleChange}
                 />
                 <input
@@ -110,6 +126,25 @@ const JobTargetForm = () => {
                 </button>
 
             </form>
+
+            
+            {
+            aiQuestions && (
+                <AIQuestionCard
+                sessionId={aiQuestions.sessionId}
+                questions={aiQuestions.questions}
+
+                onComplete={(data) => {
+
+                    setAiQuestions(null)
+
+                    setGeneratedResume(data)
+
+                    alert("AI Resume Generated Successfully 🚀")
+                }}
+                />
+            )
+            }
 
     </div>
     )
