@@ -10,7 +10,10 @@ from .models import AIQuestionSession
 from .models import AIQuestion
 
 from .utils import extract_text_from_pdf
-from .grok_client import generate_resume_with_groq
+from .grok_client import (
+    generate_resume_with_groq,
+    analyze_resume_for_questions
+)
 
 
 
@@ -20,6 +23,8 @@ class GenerateResumeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        print("GenerateResumeView HIT")
+        print(request.data)
         resume_id = request.data.get("resume_id")
         job_id = request.data.get("job_id")
 
@@ -35,11 +40,14 @@ class GenerateResumeView(APIView):
         resume_text = extract_text_from_pdf(resume.file.path)
 
         
-        # Call Grok
-        ai_output = generate_resume_with_groq(resume_text, job)
+        # STEP 1 — Analyze resume for ATS gaps
+        analysis = analyze_resume_for_questions(
+            resume_text,
+            job
+        )
 
-        # CASE 1: AI asks questions
-        if ai_output.get("type") == "questions":
+        # CASE 1 — AI generated follow-up questions
+        if analysis.get("type") == "questions":
 
             session = AIQuestionSession.objects.create(
                 user=request.user,
@@ -47,7 +55,7 @@ class GenerateResumeView(APIView):
                 job_application=job
             )
 
-            questions_data = ai_output.get("questions", [])
+            questions_data = analysis.get("questions", [])
 
             created_questions = []
 
@@ -73,6 +81,11 @@ class GenerateResumeView(APIView):
                 "questions": created_questions
             }, status=200)
 
+        # STEP 2 — No questions needed → generate resume immediately
+        ai_output = generate_resume_with_groq(
+            resume_text,
+            job
+        )
 
         #  CASE 2: AI returns resume
         if ai_output.get("type") == "resume":
@@ -138,7 +151,7 @@ ORIGINAL RESUME:
 """
 
         # Call AI again
-        ai_output = generate_resume_with_grok(
+        ai_output = generate_resume_with_groq(
             enhanced_context,
             job
         )

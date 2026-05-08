@@ -26,12 +26,12 @@ const AIQuestionCard = ({
       return
     }
 
-    try {
+    try { 
 
       setLoading(true)
 
       const res = await axios.post(
-        "http://localhost:8000/ai/answer-question/",
+        "http://localhost:8000/ai_engine/answer-question/",
         {
           session_id: sessionId,
           answers: answers

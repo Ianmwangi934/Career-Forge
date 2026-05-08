@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import ResumeManager from "./ResumeManager";
 import JobTargetForm from "./JobTargetForm";
+import AIQuestionCard from "./AIQuestionCard";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null)
@@ -116,6 +117,9 @@ const Dashboard = () => {
 
           {activeSection === "resumes" && <ResumeManager />}
           {activeSection === "ai" && <JobTargetForm />}
+          {activeSection === "aiquestions" && <AIQuestionCard />}
+          
+
 
         </div>
 

@@ -1,5 +1,5 @@
 import "./JobTargetForm.css";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import axios from "axios";
 import AIQuestionCard from "./AIQuestionCard";
 
@@ -13,8 +13,26 @@ const JobTargetForm = () => {
     })
     const [aiQuestions, setAiQuestions] = useState(null)
     const [generatedResume, setGeneratedResume] = useState(null)
+    const [resumes, setResumes] = useState([]);
 
     const [loading, setLoading] = useState(false)
+    // You must have a resume selected
+        useEffect(() => {
+            const fetchResumes = async () => {
+                try {
+                    const res = await axios.get(
+                        "http://localhost:8000/resumes/",
+                        { withCredentials: true }
+                    );
+
+                    setResumes(res.data);
+                } catch (err) {
+                    console.error("Failed to fetch resumes", err);
+                }
+            };
+
+            fetchResumes();
+        }, []);
 
     const handleChange = (e) => {
         setForm({
@@ -24,55 +42,92 @@ const JobTargetForm = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+    e.preventDefault()
 
-        // Validation: At least one field
-        const hasInput = Object.values(form).some(val => val.trim() !=="")
-        if (!hasInput) {
-            alert("Please fill at least one field.")
-            return
-        }
+    const hasInput = Object.values(form).some(
+        val => val.trim() !== ""
+    )
 
-        try {
-            setLoading(true)
+    if (!hasInput) {
+        alert("Please fill at least one field.")
+        return
+    }
 
-            const res = await axios.post(
-                "http://localhost:8000/job_applications/",
-                form,
-                {withCredentials:true}
-            )
-            // Reset form
-            setForm({
-                title:"",
-                company:"",
-                description:"",
-                responsibilities:"",
-                skills:""
+    try {
+
+        setLoading(true)
+
+        // STEP 1:
+        // Save Job Application
+        const jobRes = await axios.post(
+            "http://localhost:8000/job_applications/",
+            form,
+            {
+                withCredentials: true
+            }
+        )
+
+        const jobId = jobRes.data.id
+
+        // IMPORTANT:
+        
+
+        // STEP 2:
+        // Trigger AI analysis
+        const aiRes = await axios.post(
+            "http://localhost:8000/ai_engine/generate/",
+            {
+                //resume_id: resumeId,
+                resume_id: resumes,
+                job_id: jobId
+            },
+            {
+                withCredentials: true
+            }
+        )
+
+        // QUESTIONS
+        if (aiRes.data.type === "questions") {
+
+            setAiQuestions({
+                sessionId: aiRes.data.session_id,
+                questions: aiRes.data.questions
             })
 
-            if (res.data.type === "questions") {
-
-                setAiQuestions({
-                    sessionId: res.data.session_id,
-                    questions: res.data.questions
-                })
-
-
-
-                } else {
-
-                setGeneratedResume(res.data)
-
-                alert("Resume generated successfully 🚀")
-                }
-
-        } catch (err) {
-            console.error("Submission failed:", err)
-            alert("Something went wrong. Try again.")
-        } finally {
-            setLoading(false)
         }
+
+        // DIRECT RESUME
+        else if (
+            aiRes.data.type === "resume"
+        ) {
+
+            setGeneratedResume(aiRes.data)
+
+            alert("Resume generated 🚀")
+
+        }
+
+        // RESET
+        setForm({
+            title:"",
+            company:"",
+            description:"",
+            responsibilities:"",
+            skills:"",
+        })
+
+    } catch (err) {
+
+        console.error(err)
+
+        alert("Something went wrong.")
+
+    } finally {
+
+        setLoading(false)
+
     }
+}
 
     return (
         <div className="job-form-container">
@@ -122,7 +177,7 @@ const JobTargetForm = () => {
                 />
 
                 <button type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Save & Generate Resume"}
+                {loading ? "Saving..." : "Save & We analyze your Resume for the Job"}
                 </button>
 
             </form>

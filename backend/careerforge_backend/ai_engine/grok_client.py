@@ -1,6 +1,6 @@
 from django.conf import settings
 from groq import Groq
-import json 
+import json
 
 
 client = Groq(api_key=settings.GROQ_API_KEY)
@@ -12,7 +12,7 @@ def generate_resume_with_groq(resume_text, job_data):
 =====================
 JOB DETAILS
 =====================
-Title: {job_data.job_title}
+Title: {job_data.title}
 Company: {job_data.company}
 Description: {job_data.description}
 Responsibilities: {job_data.responsibilities}
@@ -81,11 +81,17 @@ IMPORTANT
         max_tokens=2000,
     )
 
-    content = response.choices[0].message.content.strip()
+    raw = response.choices[0].message.content.strip()
 
-    #  Critical: safely parse JSON
+    # Remove markdown wrappers
+    if raw.startswith("```json"):
+        raw = raw.replace("```json", "").replace("```", "").strip()
+
+    elif raw.startswith("```"):
+        raw = raw.replace("```", "").strip()
+
     try:
-        return json.loads(content)
+        return json.loads(raw)
 
     except json.JSONDecodeError:
         return {
@@ -247,14 +253,19 @@ Do not include explanations.
         max_tokens=300
     )
 
-    raw = response.choices[0].message.content
+    raw = response.choices[0].message.content.strip()
 
-    import json
+    # Remove markdown wrappers
+    if raw.startswith("```json"):
+        raw = raw.replace("```json", "").replace("```", "").strip()
+
+    elif raw.startswith("```"):
+        raw = raw.replace("```", "").strip()
 
     try:
         return json.loads(raw)
 
     except Exception:
         return {
-            "type": "no_question"
+            "type": "no_questions"
         }
