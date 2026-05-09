@@ -61,11 +61,18 @@ Return:
   "options": ["Yes", "No", "Familiar", "Willing to learn"]
 }}
 
-8. Otherwise return:
+8. Otherwise return STRICTLY VALID JSON in this exact format:
+
 {{
   "type": "resume",
   "content": "FULL OPTIMIZED RESUME TEXT HERE"
 }}
+
+IMPORTANT:
+- Escape ALL newline characters properly using \\n
+- Do NOT use markdown
+- Do NOT wrap JSON in triple backticks
+- Response must be parseable by Python json.loads()
 
 =====================
 IMPORTANT
@@ -94,10 +101,28 @@ IMPORTANT
         return json.loads(raw)
 
     except json.JSONDecodeError:
+
+        # Fallback recovery
+        if '"type": "resume"' in raw:
+
+            try:
+                content_start = raw.index('"content": "') + len('"content": "')
+                content_end = raw.rindex('"')
+
+                extracted_content = raw[content_start:content_end]
+
+                return {
+                    "type": "resume",
+                    "content": extracted_content
+                }
+
+            except Exception:
+                pass
+
         return {
             "type": "error",
             "message": "AI returned invalid format",
-            "raw": content
+            "raw": raw
         }
 
 def analyze_resume_for_questions(

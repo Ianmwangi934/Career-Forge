@@ -74,11 +74,15 @@ const JobTargetForm = () => {
 
         // STEP 2:
         // Trigger AI analysis
+        if (resumes.length === 0) {
+            alert("Please upload a resume first.")
+            return
+        }
         const aiRes = await axios.post(
             "http://localhost:8000/ai_engine/generate/",
             {
                 //resume_id: resumeId,
-                resume_id: resumes,
+                resume_id: resumes[0]?.id,
                 job_id: jobId
             },
             {

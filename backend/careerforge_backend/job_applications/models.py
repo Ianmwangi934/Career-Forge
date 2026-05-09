@@ -16,9 +16,29 @@ class JobApplication(models.Model):
         return self.title or "Untitled Application"
 
 class GeneratedResume(models.Model):
-    user = models.ForeignKey("resumes.Resume",on_delete=models.CASCADE)
-    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
-    file = models.FileField(upload_to="generated_resumes/")
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="generated_resumes"
+    )
+
+    base_resume = models.ForeignKey(
+        "resumes.Resume",
+        on_delete=models.CASCADE
+    )
+
+    job_application = models.ForeignKey(
+        JobApplication,
+        on_delete=models.CASCADE
+    )
+
+    file = models.FileField(
+        upload_to="generated_resumes/",
+        blank=True,
+        null=True
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
