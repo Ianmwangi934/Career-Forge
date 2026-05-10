@@ -117,6 +117,39 @@ class GenerateResumeView(APIView):
             print("Resume generation complete")
             print(ai_output)
 
+            # AI decided more clarification is needed
+            if ai_output.get("type") == "questions":
+
+                session = AIQuestionSession.objects.create(
+                    user=request.user,
+                    resume=resume,
+                    job_application=job
+                )
+
+                created_questions = []
+
+                for index, q in enumerate(ai_output.get("questions", [])):
+
+                    question = AIQuestion.objects.create(
+                        session=session,
+                        question=q.get("question"),
+                        options=q.get("options", []),
+                        order=index
+                    )
+
+                    created_questions.append({
+                        "id": question.id,
+                        "question": question.question,
+                        "options": question.options,
+                        "order": question.order
+                    })
+
+                return Response({
+                    "type": "questions",
+                    "session_id": session.id,
+                    "questions": created_questions
+                })
+
             if ai_output.get("type") == "resume":
 
                 generated = GeneratedResume.objects.create(

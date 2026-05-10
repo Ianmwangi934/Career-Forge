@@ -23,6 +23,11 @@ class AIQuestionSession(models.Model):
         on_delete=models.CASCADE,
         related_name="ai_sessions"
     )
+    answer = models.TextField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
 
     completed = models.BooleanField(default=False)
 

@@ -56,7 +56,7 @@ STRICT INSTRUCTIONS
 7. If critical domain experience is missing:
 Return:
 {{
-  "type": "question",
+  "type": "questions",
   "question": "Do you have experience in [domain]?",
   "options": ["Yes", "No", "Familiar", "Willing to learn"]
 }}
@@ -221,9 +221,43 @@ RULES
 IMPORTANT
 ==================================================
 
-If the resume already aligns well with the role,
-return no questions.
+Even if the resume aligns reasonably well,
+You MUST ask at least 2 high-quality follow-up questions.
+You should still look for deeper ATS optimization opportunities.
 
+ALWAYS try to identify:
+- missing domain exposure
+- missing scale metrics
+- missing collaboration experience
+- missing cloud/devops exposure
+- missing leadership indicators
+- missing testing practices
+- missing architecture experience
+- missing production deployment experience
+- missing AI/ML familiarity
+- missing agile/scrum exposure
+- missing monitoring/logging tools
+- missing customer-facing work
+- scale of systems handled
+- production deployment experience
+- leadership exposure
+- DevOps maturity
+- testing practices
+- collaboration style
+- Agile/Scrum experience
+- cloud infrastructure depth
+- performance optimization
+- architecture decisions
+- security practices
+- AI/ML exposure
+- customer-facing impact
+- business impact metrics
+
+The goal is to maximize ATS relevance and resume personalization.
+
+Ask at least 1 follow-up question whenever meaningful improvement is possible.
+
+Only return "no_questions" if the resume is already exceptionally tailored to the exact job requirements.
 ==================================================
 RESPONSE FORMAT
 ==================================================
@@ -274,7 +308,7 @@ Do not include explanations.
                 "content": prompt
             }
         ],
-        temperature=0.3,
+        temperature=0.1,
         max_tokens=300
     )
 
