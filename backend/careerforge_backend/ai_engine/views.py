@@ -288,6 +288,12 @@ ANSWER:
 
             enhanced_context = f"""
 
+The user has already answered all follow-up questions.
+
+You MUST now generate the FINAL optimized resume.
+
+DO NOT ask more questions.
+
 FOLLOW-UP ANSWERS:
 {answers_text}
 
@@ -304,6 +310,12 @@ ORIGINAL RESUME:
 
             print("AI OUTPUT:")
             print(ai_output)
+            if ai_output.get("type") == "questions":
+
+                return Response({
+                    "error": "AI is still asking questions",
+                    "details": ai_output
+                }, status=400)
 
             if ai_output.get("type") == "resume":
 
