@@ -24,7 +24,6 @@ class AIQuestionSession(models.Model):
         related_name="ai_sessions"
     )
     answer = models.TextField(
-        max_length=255,
         blank=True,
         null=True
     )

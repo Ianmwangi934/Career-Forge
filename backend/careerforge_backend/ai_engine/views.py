@@ -185,14 +185,16 @@ class GenerateResumeView(APIView):
 class AnswerAIQuestionView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self,request):
+    def post(self, request):
+
         session_id = request.data.get("session_id")
+        question_id = request.data.get("question_id")
         answer = request.data.get("answer")
 
         try:
             session = AIQuestionSession.objects.get(
-                id = session_id,
-                user = request.user
+                id=session_id,
+                user=request.user
             )
 
         except AIQuestionSession.DoesNotExist:
@@ -201,42 +203,88 @@ class AnswerAIQuestionView(APIView):
                 status=404
             )
 
-        #Save Answer
-        session.answer = answer
+        try:
+            question = AIQuestion.objects.get(
+                id=question_id,
+                session=session
+            )
+
+        except AIQuestion.DoesNotExist:
+            return Response(
+                {"error": "Question not found"},
+                status=404
+            )
+
+        # Save answer to specific question
+        question.answer = answer
+        question.save()
+
+        # Check if all questions answered
+        unanswered_exists = session.questions.filter(
+            answer__isnull=True
+        ).exists()
+
+        if unanswered_exists:
+
+            return Response({
+                "message": "Answer saved",
+                "waiting_for_more_answers": True
+            })
+
+        # Mark session complete
         session.completed = True
         session.save()
 
-        # Retrieve original data
+        # Retrieve resume/job
         resume = session.resume
         job = session.job_application
 
-        # Extract resume text again
-        resume_text = extract_text_from_pdf(resume.file.path)
+        # Extract resume text
+        resume_text = extract_text_from_pdf(
+            resume.file.path
+        )
 
-        #  Append follow-up answer
+        # Collect all Q&A
+        all_answers = session.questions.all().order_by("order")
+
+        answers_text = ""
+
+        for q in all_answers:
+
+            answers_text += f"""
+
+QUESTION:
+{q.question}
+
+ANSWER:
+{q.answer}
+
+"""
+
+        # Enhanced AI context
         enhanced_context = f"""
 
-FOLLOW-UP USER ANSWER:
-{answer}
+FOLLOW-UP ANSWERS:
+{answers_text}
 
 ORIGINAL RESUME:
 {resume_text}
+
 """
 
-        # Call AI again
+        # Generate optimized resume
         ai_output = generate_resume_with_groq(
             enhanced_context,
             job
         )
 
-        # Final response
         if ai_output.get("type") == "resume":
 
             generated = GeneratedResume.objects.create(
                 user=request.user,
                 base_resume=resume,
                 job_application=job,
-                file=""  # PDF later
+                file=""
             )
 
             return Response({
