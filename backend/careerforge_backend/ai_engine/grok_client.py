@@ -75,10 +75,101 @@ IMPORTANT:
 - Response must be parseable by Python json.loads()
 
 =====================
-IMPORTANT
+IMPORTANT FORMATTING RULES
 =====================
 - Output MUST be valid JSON
 - No explanations
+Return ONLY valid JSON.
+
+DO NOT:
+- Use markdown
+- Use triple backticks
+- Add explanations
+- Add comments
+- Add extra text outside JSON
+
+ALL arrays must always exist even if empty.
+
+==================================================
+REQUIRED JSON STRUCTURE
+==================================================
+
+{{
+  "type": "resume",
+  "content": {{
+    "name": "",
+    "location": "",
+    "phone": "",
+    "email": "",
+    "linkedin": "",
+    "github": "",
+    "portfolio": "",
+    "summary": "",
+
+    "experience": [
+      {{
+        "position": "",
+        "company": "",
+        "location": "",
+        "date": "",
+        "bullets": []
+      }}
+    ],
+
+    "education": [
+      {{
+        "school": "",
+        "degree": "",
+        "location": "",
+        "date": ""
+      }}
+    ],
+
+    "projects": [
+      {{
+        "name": "",
+        "subtitle": "",
+        "date": "",
+        "bullets": []
+      }}
+    ],
+
+    "skills": [
+      {{
+        "category": "",
+        "items": []
+      }}
+    ],
+
+    "certifications": [],
+    "languages": []
+  }}
+}}
+
+==================================================
+ADDITIONAL INSTRUCTIONS
+==================================================
+
+- bullets must be concise
+- bullets must be achievement-oriented
+- bullets should include metrics when realistic
+- skills should be grouped into categories
+- preserve project names if possible
+- preserve education accuracy
+- preserve chronology
+-NEVER exaggerate seniority.
+-Use concise professional language.
+-Avoid robotic AI-style wording.
+-Match terminology used in the target job description.
+-Industry-specific terminology
+-Human-like writing quality
+-Keyword relevance
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+Output STRICTLY VALID JSON ONLY.
 """
 
     response = client.chat.completions.create(

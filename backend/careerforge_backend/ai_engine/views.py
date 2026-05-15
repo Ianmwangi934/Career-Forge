@@ -9,6 +9,7 @@ from resumes.models import Resume
 from job_applications.models import JobApplication, GeneratedResume
 from .models import AIQuestionSession
 from .models import AIQuestion
+from .services.pdf_generator import generate_resume_pdf
 
 from .utils import extract_text_from_pdf
 from .grok_client import (
@@ -172,20 +173,22 @@ class GenerateResumeView(APIView):
                 generated = GeneratedResume.objects.create(
                     user=request.user,
                     base_resume=resume,
-                    job_application=job,
-                    file=""
+                    job_application=job
+                )
+
+                resume_data = ai_output.get("content")
+
+                pdf_url = generate_resume_pdf(
+                    generated,
+                    resume_data
                 )
 
                 return Response({
+                    "type": "resume",
                     "message": "Resume generated",
-                    "content": ai_output.get("content"),
-                    "generated_id": generated.id
+                    "generated_id": generated.id,
+                    "pdf_url": pdf_url
                 })
-
-            return Response({
-                "error": "AI failed",
-                "details": ai_output
-            }, status=500)
 
         except Exception as e:
 
@@ -322,20 +325,23 @@ ORIGINAL RESUME:
                 generated = GeneratedResume.objects.create(
                     user=request.user,
                     base_resume=resume,
-                    job_application=job,
-                    file=""
+                    job_application=job
+                )
+
+                resume_data = ai_output.get("content")
+
+                pdf_url = generate_resume_pdf(
+                    generated,
+                    resume_data
                 )
 
                 return Response({
+                    "type": "resume",
                     "message": "Resume generated successfully",
-                    "content": ai_output.get("content"),
-                    "generated_id": generated.id
+                    "generated_id": generated.id,
+                    "pdf_url": pdf_url
                 })
-
-            return Response({
-                "error": "AI failed",
-                "details": ai_output
-            }, status=500)
+            
 
         except Exception as e:
 

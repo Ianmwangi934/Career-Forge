@@ -47,3 +47,43 @@
 .job-form button:hover {
   background: #0ea5e9;
 }
+
+
+
+.generated-resume-box {
+    margin-top: 40px;
+    padding: 25px;
+    border-radius: 20px;
+    background: #111827;
+    color: white;
+}
+
+.generated-actions {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.view-btn,
+.download-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.view-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.download-btn {
+    background: #10b981;
+    color: white;
+}
+
+.generated-preview {
+    margin-top: 20px;
+    overflow: auto;
+}

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+
+        @page {
+            margin: 30px;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #000;
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        .header {
+            margin-bottom: 14px;
+        }
+
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .contact-line {
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+
+        .section {
+            margin-top: 14px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            padding-bottom: 2px;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+
+        .item {
+            margin-bottom: 10px;
+        }
+
+        .top-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .date {
+            font-size: 10px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+
+        ul {
+            margin-top: 4px;
+            margin-bottom: 4px;
+            padding-left: 18px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .summary {
+            text-align: justify;
+        }
+
+        .skills-group {
+            margin-bottom: 4px;
+        }
+
+        .skills-label {
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div class="name">
+            {{ name }}
+        </div>
+
+        {% if location %}
+        <div class="contact-line">
+            {{ location }}
+        </div>
+        {% endif %}
+
+        <div class="contact-line">
+
+            {% if phone %}
+                {{ phone }}
+            {% endif %}
+
+            {% if email %}
+                | {{ email }}
+            {% endif %}
+
+            {% if linkedin %}
+                | LinkedIn: {{ linkedin }}
+            {% endif %}
+
+        </div>
+
+        <div class="contact-line">
+
+            {% if github %}
+                GitHub: {{ github }}
+            {% endif %}
+
+            {% if portfolio %}
+                | Portfolio Website: {{ portfolio }}
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    {% if summary %}
+    <div class="section">
+
+        <div class="section-title">
+            Professional Summary
+        </div>
+
+        <div class="summary">
+            {{ summary }}
+        </div>
+
+    </div>
+    {% endif %}
+
+
+    <!-- EXPERIENCE -->
+    {% if experience %}
+    <div class="section">
+
+        <div class="section-title">
+            Experience
+        </div>
+
+        {% for exp in experience %}
+
+        <div class="item">
+
+            <div class="top-line">
+
+                <div class="title">
+                    {{ exp.position }}
+                </div>
+
+                <div class="date">
+                    {{ exp.date }}
+                </div>
+
+            </div>
+
+            <div class="subtitle">
+                {{ exp.company }}
+            </div>
+
+            {% if exp.bullets %}
+            <ul>
+
+                {% for bullet in exp.bullets %}
+                    <li>{{ bullet }}</li>
+                {% endfor %}
+
+            </ul>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+
+    <!-- EDUCATION -->
+    {% if education %}
+    <div class="section">
+
+        <div class="section-title">
+            Education
+        </div>
+
+        {% for edu in education %}
+
+        <div class="item">
+
+            <div class="top-line">
+
+                <div class="title">
+                    {{ edu.school }}
+                </div>
+
+                <div class="date">
+                    {{ edu.date }}
+                </div>
+
+            </div>
+
+            <div class="subtitle">
+                {{ edu.degree }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+
+    <!-- PROJECTS -->
+    {% if projects %}
+    <div class="section">
+
+        <div class="section-title">
+            Projects
+        </div>
+
+        {% for project in projects %}
+
+        <div class="item">
+
+            <div class="top-line">
+
+                <div class="title">
+                    {{ project.name }}
+                </div>
+
+                <div class="date">
+                    {{ project.date }}
+                </div>
+
+            </div>
+
+            {% if project.subtitle %}
+            <div class="subtitle">
+                {{ project.subtitle }}
+            </div>
+            {% endif %}
+
+            {% if project.bullets %}
+            <ul>
+
+                {% for bullet in project.bullets %}
+                    <li>{{ bullet }}</li>
+                {% endfor %}
+
+            </ul>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+
+    <!-- SKILLS -->
+    {% if skills %}
+    <div class="section">
+
+        <div class="section-title">
+            Skills
+        </div>
+
+        {% for skill_group in skills %}
+
+        <div class="skills-group">
+
+            <span class="skills-label">
+                {{ skill_group.category }}:
+            </span>
+
+            {{ skill_group.items|join:", " }}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+
+    <!-- CERTIFICATIONS -->
+    {% if certifications %}
+    <div class="section">
+
+        <div class="section-title">
+            Training & Certifications
+        </div>
+
+        <ul>
+
+            {% for cert in certifications %}
+                <li>{{ cert }}</li>
+            {% endfor %}
+
+        </ul>
+
+    </div>
+    {% endif %}
+
+
+    <!-- LANGUAGES -->
+    {% if languages %}
+    <div class="section">
+
+        <div class="section-title">
+            Languages
+        </div>
+
+        <ul>
+
+            {% for language in languages %}
+                <li>{{ language }}</li>
+            {% endfor %}
+
+        </ul>
+
+    </div>
+    {% endif %}
+
+</body>
+</html>

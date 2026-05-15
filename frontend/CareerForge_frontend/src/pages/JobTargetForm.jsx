@@ -2,6 +2,9 @@ import "./JobTargetForm.css";
 import { useState , useEffect} from "react";
 import axios from "axios";
 import AIQuestionCard from "./AIQuestionCard";
+import { Document, Page, pdfjs } from "react-pdf";
+import workerSrc from "pdfjs-dist/build/pdf.worker?url";
+pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const JobTargetForm = () => {
     const [form, setForm] = useState({
@@ -204,6 +207,59 @@ const JobTargetForm = () => {
                 />
             )
             }
+
+            {
+                generatedResume && (
+
+                    <div className="generated-resume-box">
+
+                    <h2>
+                        Your AI Optimized Resume
+                    </h2>
+
+                    <div className="generated-actions">
+
+                        <a
+                        href={`http://localhost:8000${generatedResume.pdf_url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="view-btn"
+                        >
+                        View Resume
+                        </a>
+
+                        <a
+                        href={`http://localhost:8000${generatedResume.pdf_url}`}
+                        download
+                        className="download-btn"
+                        >
+                        Download PDF
+                        </a>
+
+                    </div>
+
+                    <div className="generated-preview">
+
+                        <Document
+                        file={`http://localhost:8000${generatedResume.pdf_url}`}
+                        onLoadError={(err) =>
+                            console.error("PDF Preview Error:", err)
+                        }
+                        >
+
+                        <Page
+                            pageNumber={1}
+                            width={500}
+                        />
+
+                        </Document>
+
+                    </div>
+
+                    </div>
+
+                )
+                }
 
     </div>
     )
