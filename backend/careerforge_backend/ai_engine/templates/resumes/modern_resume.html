@@ -13,39 +13,45 @@
             font-family: Arial, Helvetica, sans-serif;
             color: #000;
             font-size: 11px;
-            line-height: 1.35;
+            line-height: 1.4;
         }
 
         .header {
-            margin-bottom: 14px;
+            text-align: center;
+            margin-bottom: 18px;
         }
 
         .name {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            margin-bottom: 4px;
+            color: #111827;
+            margin-bottom: 6px;
         }
 
         .contact-line {
             font-size: 10px;
-            margin-bottom: 2px;
+            color: #444;
+            margin-bottom: 3px;
+            word-break: break-word;
         }
 
         .section {
-            margin-top: 14px;
+            margin-top: 18px;
         }
 
         .section-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
-            border-bottom: 1px solid #000;
-            padding-bottom: 2px;
-            margin-bottom: 8px;
-            text-transform: capitalize;
+            text-transform: uppercase;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 4px;
+            margin-bottom: 10px;
+            color: #1e3a8a;
+            letter-spacing: 0.5px;
         }
 
         .item {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .top-line {
@@ -57,16 +63,20 @@
         .title {
             font-weight: bold;
             font-size: 11px;
+            color: #111827;
         }
 
         .date {
             font-size: 10px;
+            color: #666;
         }
 
         .subtitle {
             font-size: 11px;
             margin-top: 2px;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
+            color: #444;
+            font-style: italic;
         }
 
         ul {
@@ -76,7 +86,7 @@
         }
 
         li {
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
 
         .summary {
@@ -84,11 +94,12 @@
         }
 
         .skills-group {
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .skills-label {
             font-weight: bold;
+            color: #111827;
         }
 
     </style>
@@ -120,20 +131,20 @@
                 | {{ email }}
             {% endif %}
 
-            {% if linkedin %}
-                | LinkedIn: {{ linkedin }}
-            {% endif %}
-
         </div>
 
         <div class="contact-line">
 
+            {% if linkedin %}
+                LinkedIn: {{ linkedin }}
+            {% endif %}
+
             {% if github %}
-                GitHub: {{ github }}
+                | GitHub: {{ github }}
             {% endif %}
 
             {% if portfolio %}
-                | Portfolio Website: {{ portfolio }}
+                | Portfolio: {{ portfolio }}
             {% endif %}
 
         </div>
@@ -183,6 +194,9 @@
 
             <div class="subtitle">
                 {{ exp.company }}
+                {% if exp.location %}
+                    | {{ exp.location }}
+                {% endif %}
             </div>
 
             {% if exp.bullets %}
@@ -229,6 +243,10 @@
 
             <div class="subtitle">
                 {{ edu.degree }}
+
+                {% if edu.location %}
+                    | {{ edu.location }}
+                {% endif %}
             </div>
 
         </div>
