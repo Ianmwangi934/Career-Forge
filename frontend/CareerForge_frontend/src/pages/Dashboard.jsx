@@ -4,6 +4,7 @@ import axios from "axios"
 import ResumeManager from "./ResumeManager";
 import JobTargetForm from "./JobTargetForm";
 import AIQuestionCard from "./AIQuestionCard";
+import Applications from "./Applications";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null)
@@ -48,7 +49,12 @@ const Dashboard = () => {
           </button>
 
           <button
-            className="nav-item"
+            className={`nav-item ${
+              activeSection === "applications"
+                ? "active"
+                : ""
+            }`}
+            onClick={() => setActiveSection("applications")}
           >
             Applications
           </button>
@@ -102,7 +108,7 @@ const Dashboard = () => {
                 <div className="card">
                   <h3>📊 Applications</h3>
                   <p>Track your job applications and progress.</p>
-                  <button>View Applications</button>
+                  <button onClick={() => setActiveSection("applications")}>View Applications</button>
                 </div>
 
                 <div className="card">
@@ -118,6 +124,7 @@ const Dashboard = () => {
           {activeSection === "resumes" && <ResumeManager />}
           {activeSection === "ai" && <JobTargetForm />}
           {activeSection === "aiquestions" && <AIQuestionCard />}
+          {activeSection === "applications" && (<Applications />)}
           
 
 

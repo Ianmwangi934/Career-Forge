@@ -25,21 +25,23 @@ class GeneratedResume(models.Model):
 
     base_resume = models.ForeignKey(
         "resumes.Resume",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="generated_versions"
     )
 
     job_application = models.ForeignKey(
         JobApplication,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="generated_resumes"
     )
 
     file = models.FileField(
         upload_to="generated_resumes/",
-        blank=True,
-        null=True
+        blank=False,
+        null=False
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} - Generated Resume"
+        return f"{self.user} - {self.job_application.title} @ {self.job_application.company}"

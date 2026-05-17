@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import JobApplication
+from .models import GeneratedResume
 
 class JobApplicationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,3 +20,18 @@ class JobApplicationSerializer(serializers.ModelSerializer):
             )
 
         return data
+
+class GeneratedResumeSerializer(serializers.ModelSerializer):
+    job_title = serializers.CharField(source="job_application.title")
+    company = serializers.CharField(source="job_application.company")
+
+    class Meta:
+        model = GeneratedResume
+
+        fields = [
+            "id",
+            "file",
+            "job_title",
+            "company",
+            "created_at"
+        ]

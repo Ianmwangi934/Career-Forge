@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import JobAppliactionListCreateView
+from .views import JobApplicationListCreateView, GeneratedResumeListView
 
 urlpatterns = [
-    path("", JobAppliactionListCreateView.as_view(), name="appliactions")
+    path("", JobApplicationListCreateView.as_view(), name="appliactions"),
+    path("generated-resumes/",GeneratedResumeListView.as_view(),name="generated-resumes")
 ]
