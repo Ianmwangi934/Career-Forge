@@ -41,8 +41,9 @@ const Applications = () =>{
                 {
                     applications.map((app) => {
 
-                        const fileUrl =
-                            `http://localhost:8000${app.file}`
+                        const fileUrl = app.file.startsWith("http")
+                            ? app.file
+                            : `http://localhost:8000${app.file}`
 
                         return (
 
@@ -55,16 +56,21 @@ const Applications = () =>{
                                     href={fileUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="application-link"
                                 >
 
-                                    <Document file={fileUrl}>
+                                    <div className="application-preview">
 
-                                        <Page
-                                            pageNumber={1}
-                                            width={220}
-                                        />
+                                        <Document file={fileUrl}>
 
-                                    </Document>
+                                            <Page
+                                                pageNumber={1}
+                                                width={150}
+                                            />
+
+                                        </Document>
+
+                                    </div>
 
                                 </a>
 

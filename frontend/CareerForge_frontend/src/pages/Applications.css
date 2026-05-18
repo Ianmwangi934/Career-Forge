@@ -1,34 +1,126 @@
+.applications-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 10px 0 40px;
+
+    background: #020617;
+}
+
+.applications-page h2 {
+    margin-bottom: 22px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #f9fafb;
+}
+
+/* GRID */
 .applications-grid {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    padding-bottom: 10px;
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(190px, 190px));
+
+    gap: 22px;
+
+    align-items: start;
 }
 
+/* CARD */
 .application-card {
-    min-width: 260px;
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    flex-shrink: 0;
+    background: #111827;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+
+    box-shadow:
+        0 6px 18px rgba(0,0,0,0.25);
 }
 
+.application-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(96,165,250,0.45);
+
+    box-shadow:
+        0 14px 32px rgba(0,0,0,0.35);
+}
+
+/* LINK */
+.application-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* PREVIEW AREA */
+.application-preview {
+    background: linear-gradient(
+        to bottom,
+        #1f2937,
+        #111827
+    );
+
+    height: 250px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    overflow: hidden;
+
+    padding-top: 12px;
+}
+
+/* PDF PAPER */
+.application-preview .react-pdf__Page {
+    box-shadow:
+        0 4px 14px rgba(0,0,0,0.35);
+
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+/* REMOVE WEIRD STRETCHING */
+.application-preview canvas {
+    width: 150px !important;
+    height: auto !important;
+    display: block;
+}
+
+/* INFO */
 .application-info {
-    margin-top: 12px;
+    padding: 14px;
 }
 
 .application-info h3 {
-    font-size: 16px;
-    margin-bottom: 4px;
+    font-size: 15px;
+    line-height: 1.45;
+    margin-bottom: 8px;
+    color: #f9fafb;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
 }
 
 .application-info p {
-    color: #555;
-    margin-bottom: 6px;
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .application-info span {
-    font-size: 12px;
-    color: #777;
+    font-size: 11px;
+    color: #6b7280;
 }
