@@ -15,14 +15,37 @@
 
 /* GRID */
 .applications-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fill, minmax(190px, 190px));
-
+    display: flex;
     gap: 22px;
 
-    align-items: start;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding-bottom: 12px;
+
+    scroll-behavior: smooth;
+}
+
+/* Hide ugly scrollbar */
+.applications-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.applications-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.applications-grid::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+}
+
+/* Prevent shrinking */
+.application-card {
+    min-width: 190px;
+    max-width: 190px;
+
+    flex-shrink: 0;
 }
 
 /* CARD */
