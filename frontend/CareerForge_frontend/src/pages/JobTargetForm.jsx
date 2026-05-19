@@ -184,7 +184,7 @@ const JobTargetForm = () => {
                 />
 
                 <button type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Save & We analyze your Resume for the Job"}
+                {loading ? "Analyzing your Resume with the Job Description..." : "Save & We analyze your Resume for the Job"}
                 </button>
 
             </form>
