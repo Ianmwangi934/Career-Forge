@@ -9,6 +9,7 @@ const Home = () => {
 
     return (
         <div className="home-container">
+            <h1 className="head">CareerForge ✨</h1>
 
             <div className="home-wrapper">
 

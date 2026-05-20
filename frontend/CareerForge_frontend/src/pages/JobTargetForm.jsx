@@ -17,6 +17,7 @@ const JobTargetForm = () => {
     const [aiQuestions, setAiQuestions] = useState(null)
     const [generatedResume, setGeneratedResume] = useState(null)
     const [resumes, setResumes] = useState([]);
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false)
 
     const [loading, setLoading] = useState(false)
     // You must have a resume selected
@@ -110,7 +111,7 @@ const JobTargetForm = () => {
 
             setGeneratedResume(aiRes.data)
 
-            alert("Resume generated 🚀")
+            setShowSuccessAlert(true)
 
         }
 
@@ -202,64 +203,111 @@ const JobTargetForm = () => {
 
                     setGeneratedResume(data)
 
-                    alert("AI Resume Generated Successfully 🚀")
+                    setShowSuccessAlert(true)
                 }}
                 />
             )
             }
 
             {
-                generatedResume && (
+                showSuccessAlert && (
 
-                    <div className="generated-resume-box">
+                    <div className="custom-alert-overlay">
 
-                    <h2>
-                        Your AI Optimized Resume
-                    </h2>
+                        <div className="custom-alert">
 
-                    <div className="generated-actions">
+                            <div className="success-icon">
+                                🚀
+                            </div>
 
-                        <a
-                        href={`http://localhost:8000${generatedResume.pdf_url}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="view-btn"
-                        >
-                        View Resume
-                        </a>
+                            <h2>
+                                Resume Generated Successfully
+                            </h2>
 
-                        <a
-                        href={`http://localhost:8000${generatedResume.pdf_url}`}
-                        download
-                        className="download-btn"
-                        >
-                        Download PDF
-                        </a>
+                            <p>
+                                Your AI-optimized resume is ready.
+                            </p>
 
-                    </div>
+                            <button
+                                onClick={() => setShowSuccessAlert(false)}
+                                className="alert-btn"
+                            >
+                                OK
+                            </button>
 
-                    <div className="generated-preview">
-
-                        <Document
-                        file={`http://localhost:8000${generatedResume.pdf_url}`}
-                        onLoadError={(err) =>
-                            console.error("PDF Preview Error:", err)
-                        }
-                        >
-
-                        <Page
-                            pageNumber={1}
-                            width={500}
-                        />
-
-                        </Document>
-
-                    </div>
+                        </div>
 
                     </div>
 
                 )
-                }
+            }
+
+            {
+                generatedResume && (
+
+                    <div className="resume-modal-overlay">
+
+                        <div className="generated-resume-box">
+
+                            <button
+                                className="close-modal-btn"
+                                onClick={() => setGeneratedResume(null)}
+                            >
+                                ×
+                            </button>
+
+                            <h2>
+                                Your AI Optimized Resume
+                            </h2>
+
+                            <div className="generated-actions">
+
+                                <a
+                                    href={`http://localhost:8000${generatedResume.pdf_url}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="view-btn"
+                                >
+                                    View Resume
+                                </a>
+
+                                <a
+                                    href={`http://localhost:8000${generatedResume.pdf_url}`}
+                                    download
+                                    className="download-btn"
+                                >
+                                    Download PDF
+                                </a>
+
+                            </div>
+
+                            <div className="generated-preview">
+
+                                <Document
+                                    file={`http://localhost:8000${generatedResume.pdf_url}`}
+                                    onLoadError={(err) =>
+                                        console.error(
+                                            "PDF Preview Error:",
+                                            err
+                                        )
+                                    }
+                                >
+
+                                    <Page
+                                        pageNumber={1}
+                                        width={420}
+                                    />
+
+                                </Document>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                )
+            }
 
     </div>
     )

@@ -21,9 +21,15 @@
     overflow-x: auto;
     overflow-y: hidden;
 
-    padding-bottom: 12px;
+    width: 100%;
+
+    padding-bottom: 14px;
 
     scroll-behavior: smooth;
+
+    scrollbar-width: thin;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Hide ugly scrollbar */
