@@ -9,6 +9,7 @@ import Applications from "./Applications";
 const Dashboard = () => {
   const [user, setUser] = useState(null)
   const [activeSection, setActiveSection] = useState("dashboard")
+  const [careerNews, setCareerNews] = useState([])
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -22,8 +23,21 @@ const Dashboard = () => {
         console.error(err)
       }
     }
+    // Fetching career Insights and market trends
 
+    const fetchCareerNews = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/ai_engine/career-news/"
+        )
+
+        setCareerNews(res.data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
     fetchUser()
+    fetchCareerNews()
   }, [])
 
   return (
@@ -96,7 +110,6 @@ const Dashboard = () => {
               </div>
 
               <div className="cards">
-
                 <div className="card">
                   <h3>📄 Resumes</h3>
                   <p>Upload and tailor resumes for each job.</p>
@@ -117,7 +130,64 @@ const Dashboard = () => {
                   <button onClick={() => setActiveSection("ai")}>Use AI</button>
                 </div>
 
+
               </div>
+              <div className="career-news-section">
+
+                  <h2 className="career-news-title">
+                    Career Insights & Market Trends
+                  </h2>
+
+                  <div className="news-slider">
+
+                    <div className="news-track">
+
+                      {[...careerNews, ...careerNews].map(
+                        (news, index) => (
+
+                          <a
+                            key={index}
+                            href={news.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="news-card"
+                          >
+
+                            {
+                              news.image && (
+                                <img
+                                  src={news.image}
+                                  alt={news.title}
+                                />
+                              )
+                            }
+
+                            <div className="news-content">
+
+                              <span className="news-source">
+                                {news.source}
+                              </span>
+
+                              <h3>
+                                {news.title}
+                              </h3>
+
+                              <p>
+                                {news.description}
+                              </p>
+
+                            </div>
+
+                          </a>
+
+                        )
+                      )}
+
+                    </div>
+
+                  </div>
+
+                </div>
             </>
           )}
 

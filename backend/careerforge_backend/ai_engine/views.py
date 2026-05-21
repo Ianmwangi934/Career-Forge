@@ -10,12 +10,17 @@ from job_applications.models import JobApplication, GeneratedResume
 from .models import AIQuestionSession
 from .models import AIQuestion
 from .services.pdf_generator import generate_resume_pdf
+from django.conf import settings
+import requests
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from .utils import extract_text_from_pdf
 from .grok_client import (
     generate_resume_with_groq,
     analyze_resume_for_questions
 )
+NEWS_API_KEY = settings.NEWS_API_KEY 
 
 
 
@@ -353,3 +358,31 @@ ORIGINAL RESUME:
             return Response({
                 "error": str(e)
             }, status=500)
+
+
+@api_view(["GET"])
+def career_news(request):
+
+    url = (
+        "https://newsapi.org/v2/everything?"
+        "q=careers OR hiring OR technology jobs OR remote work"
+        "&language=en"
+        "&sortBy=publishedAt"
+        f"&apiKey={NEWS_API_KEY}"
+    )
+
+    response = requests.get(url)
+    data = response.json()
+    articles = data.get("articles", [])
+    formatted = []
+
+    for article in articles[:10]:
+        formatted.append({
+            "title": article.get("title"),
+            "description": article.get("description"),
+            "image": article.get("urlToImage"),
+            "url": article.get("url"),
+            "source": article.get("source", {}).get("name")
+        })
+
+    return Response(formatted)
