@@ -1,6 +1,7 @@
 import "./ResumeManager.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import ResumeInsights from "./ResumeInsights";
 import { Document, Page, pdfjs } from "react-pdf";
 import workerSrc from "pdfjs-dist/build/pdf.worker?url";
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
@@ -188,6 +189,7 @@ const ResumeManager = () => {
         )}
 
       </div>
+      <ResumeInsights />
 
     </div>
     )

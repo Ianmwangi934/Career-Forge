@@ -1,0 +1,140 @@
+.resume-insights {
+
+    margin-top: 40px;
+}
+
+/* TITLE */
+.insights-title {
+
+    font-size: 28px;
+    font-weight: 700;
+
+    margin-bottom: 24px;
+
+    color: #f8fafc;
+}
+
+/* GRID */
+.insights-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(320px, 1fr));
+
+    gap: 24px;
+}
+
+/* CARD */
+.insight-card {
+
+    background: #0f172a;
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* HOVER */
+.insight-card:hover {
+
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 18px 45px rgba(0,0,0,0.45);
+}
+
+/* IMAGE */
+.insight-card img {
+
+    width: 100%;
+    height: 210px;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+/* CONTENT */
+.insight-content {
+
+    padding: 22px;
+}
+
+/* HEADINGS */
+.insight-content h3 {
+
+    font-size: 22px;
+
+    margin-bottom: 18px;
+
+    color: white;
+}
+
+/* LIST */
+.insight-content ul {
+
+    padding-left: 18px;
+}
+
+/* ITEMS */
+.insight-content li {
+
+    margin-bottom: 12px;
+
+    line-height: 1.7;
+
+    color: #cbd5e1;
+
+    font-size: 15px;
+}
+
+/* CATEGORY GLOW COLORS */
+
+.strengths:hover {
+    border-color: #10b981;
+}
+
+.missing:hover {
+    border-color: #f59e0b;
+}
+
+.trends:hover {
+    border-color: #38bdf8;
+}
+
+.recommendations:hover {
+    border-color: #a855f7;
+}
+
+/* LOADING */
+.insights-loading {
+
+    margin-top: 30px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background: #0f172a;
+
+    color: #38bdf8;
+
+    text-align: center;
+
+    font-size: 18px;
+
+    border:
+        1px solid rgba(255,255,255,0.05);
+}

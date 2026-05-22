@@ -14,8 +14,10 @@ from django.conf import settings
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from resumes.models import Resume
+import json
 
-from .utils import extract_text_from_pdf
+from .utils import extract_text_from_pdf, analyze_resume_with_ai
 from .grok_client import (
     generate_resume_with_groq,
     analyze_resume_for_questions
@@ -386,3 +388,30 @@ def career_news(request):
         })
 
     return Response(formatted)
+
+@api_view(["GET"])
+def resume_insights(request):
+
+    user = request.user
+
+    resume = Resume.objects.filter(
+        user=user
+    ).first()
+
+    if not resume:
+
+        return Response({
+            "error": "No resume uploaded."
+        }, status=404)
+
+    pdf_path = resume.file.path
+
+    resume_text = extract_text_from_pdf(
+        pdf_path
+    )
+
+    data = analyze_resume_with_ai(
+        resume_text
+    )
+
+    return Response(data)

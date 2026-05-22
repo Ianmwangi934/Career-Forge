@@ -47,6 +47,7 @@ STRICT INSTRUCTIONS
 
 5. Industry alignment:
    - Adapt wording to match the company's industry
+   -Always include metrics of the value created in the project section and experience section.
 
 6. Improve:
    - Summary
