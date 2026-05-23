@@ -64,7 +64,7 @@ class GenerateResumeView(APIView):
             )
 
             print("PDF extraction successful")
-            print("Resume text length:", len(resume_text))
+            #print("Resume text length:", len(resume_text))
 
             # Analyze
             analysis = analyze_resume_for_questions(
@@ -318,8 +318,8 @@ ORIGINAL RESUME:
                 job
             )
 
-            print("AI OUTPUT:")
-            print(ai_output)
+            #print("AI OUTPUT:")
+            #print(ai_output)
             if ai_output.get("type") == "questions":
 
                 return Response({

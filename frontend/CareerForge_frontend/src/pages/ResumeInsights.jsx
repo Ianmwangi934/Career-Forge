@@ -1,6 +1,10 @@
 import "./ResumeInsights.css"
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Strength from "../assets/Strength.jpeg"
+import Recomendations from "../assets/Recomendations.jpeg"
+import Missing from "../assets/missing.jpeg"
+import Market from "../assets/market.jpeg"
 
 const ResumeInsights = () => {
     const [insights, setInsights] = useState(null)
@@ -57,9 +61,10 @@ const ResumeInsights = () => {
                 <div className="insight-card strengths">
 
                     <img
-                        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+                        src={Strength}
                         alt="Strengths"
                     />
+                                        
 
                     <div className="insight-content">
 
@@ -89,7 +94,7 @@ const ResumeInsights = () => {
                 <div className="insight-card missing">
 
                     <img
-                        src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
+                        src={Missing}
                         alt="Missing Skills"
                     />
 
@@ -121,7 +126,7 @@ const ResumeInsights = () => {
                 <div className="insight-card trends">
 
                     <img
-                        src="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+                        src={Market}
                         alt="Market Trends"
                     />
 
@@ -153,7 +158,7 @@ const ResumeInsights = () => {
                 <div className="insight-card recommendations">
 
                     <img
-                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40"
+                        src={Recomendations}
                         alt="Recommendations"
                     />
 
