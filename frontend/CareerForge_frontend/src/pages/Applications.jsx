@@ -27,14 +27,81 @@ const Applications = () =>{
         } catch (err) {
             console.error(err)
         }
-    }
+    };
+
+    // Delete a single Resume
+    const deleteResume = async (id) => {
+        const confirmDelete = window.confirm("Delete This Resume?");
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(
+                `http://localhost:8000/ai_engine/generated-resumes/${id}/delete/`,
+
+                {
+                    withCredentials: true
+                }
+            );
+             setApplications(
+                applications.filter(
+                    (app) => app.id !== id
+                )
+            );
+        } catch (err) {
+            console.error(err);
+        }
+        
+    };
+
+    // Delete all generated Resumes
+    const deleteAllResumes = async () => {
+
+        const confirmDelete = window.confirm(
+            "Delete ALL generated resumes?"
+        );
+
+        if (!confirmDelete) return;
+
+        try {
+
+            await axios.delete(
+                "http://localhost:8000/ai_engine/generated-resumes/delete-all/",
+                {
+                    withCredentials: true
+                }
+            );
+
+            setApplications([]);
+
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
         <div className="applications-page">
 
-            <h2>
-                AI Generated Resumes
-            </h2>
+            <div className="applications-header">
+
+                <h2>
+                    AI Generated Resumes
+                </h2>
+
+                {
+                    applications.length > 0 && (
+
+                        <button
+                            className="delete-all-btn"
+                            onClick={deleteAllResumes}
+                        >
+                            Delete All
+                        </button>
+
+                    )
+                }
+
+            </div>
+
 
             <div className="applications-grid">
 
@@ -91,6 +158,13 @@ const Applications = () =>{
                                             ).toLocaleDateString()
                                         }
                                     </span>
+
+                                    <button
+                                        className="delete-btn"
+                                        onClick={() => deleteResume(app.id)}
+                                    >
+                                        Delete Resume
+                                    </button>
 
                                 </div>
 

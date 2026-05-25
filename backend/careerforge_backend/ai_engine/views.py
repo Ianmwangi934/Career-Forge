@@ -3,7 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from django.db.models import Q
+from django.db.models import Q, Count
+from collections import Counter
+from django.utils import timezone
+from datetime import timedelta
 
 from resumes.models import Resume
 from job_applications.models import JobApplication, GeneratedResume
@@ -415,3 +418,281 @@ def resume_insights(request):
     )
 
     return Response(data)
+
+class DeleteGeneratedResumeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, resume_id):
+
+        try:
+
+            generated_resume = GeneratedResume.objects.get(
+                id=resume_id,
+                user = request.user
+            )
+
+            #Delete the pdf files if it exists
+            if generated_resume.file:
+                generated_resume.file.delete(save=False)
+
+            #Delete database records
+            generated_resume.delete()
+
+            return Response({
+                "message": "Generated resume deleted successfully"
+            })
+
+        except GeneratedResume.DoesNotExist:
+            return Response({
+                "error":"Resume Not Found"
+            }, status=404)
+
+class DeleteAllGeneratedResumesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+
+        resumes = GeneratedResume.objects.filter(
+            user=request.user
+        )
+
+        count = resumes.count()
+
+        for resume in resumes:
+
+            if resume.file:
+                resume.file.delete(save=False)
+
+        resumes.delete()
+
+        return Response({
+            "message": f"{count} generated resumes deleted"
+        })
+
+class ResumeAnalyticsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        user = request.user
+
+        generated_resumes = (
+            GeneratedResume.objects.filter(
+                user=user
+            )
+            .select_related("job_application")
+        )
+
+        total_generated = generated_resumes.count()
+
+        # -----------------------------------
+        # MOST TARGETED ROLE
+        # -----------------------------------
+
+        top_role = (
+            generated_resumes
+            .values("job_application__title")
+            .annotate(count=Count("id"))
+            .order_by("-count")
+            .first()
+        )
+
+        most_targeted_role = (
+            top_role["job_application__title"]
+            if top_role and top_role["job_application__title"]
+            else "No role data"
+        )
+
+        # -----------------------------------
+        # MOST TARGETED COMPANY
+        # -----------------------------------
+
+        top_company = (
+            generated_resumes
+            .values("job_application__company")
+            .annotate(count=Count("id"))
+            .order_by("-count")
+            .first()
+        )
+
+        most_targeted_company = (
+            top_company["job_application__company"]
+            if top_company and top_company["job_application__company"]
+            else "No company data"
+        )
+
+        # -----------------------------------
+        # UNIQUE ROLES TARGETED
+        # -----------------------------------
+
+        unique_roles_targeted = (
+            generated_resumes
+            .values("job_application__title")
+            .distinct()
+            .count()
+        )
+
+        # -----------------------------------
+        # UNIQUE COMPANIES TARGETED
+        # -----------------------------------
+
+        unique_companies_targeted = (
+            generated_resumes
+            .values("job_application__company")
+            .distinct()
+            .count()
+        )
+
+        # -----------------------------------
+        # MONTHLY GENERATION COUNT
+        # -----------------------------------
+
+        now = timezone.now()
+
+        start_month = now.replace(
+            day=1,
+            hour=0,
+            minute=0,
+            second=0,
+            microsecond=0
+        )
+
+        monthly_generation_count = (
+            generated_resumes
+            .filter(created_at__gte=start_month)
+            .count()
+        )
+
+        # -----------------------------------
+        # TAILORED RESUME PERCENTAGE
+        # -----------------------------------
+
+        total_job_applications = (
+            JobApplication.objects.filter(
+                user=user
+            ).count()
+        )
+
+        if total_job_applications > 0:
+
+            tailored_resume_percentage = int(
+                (
+                    total_generated /
+                    total_job_applications
+                ) * 100
+            )
+
+        else:
+
+            tailored_resume_percentage = 0
+
+        tailored_resume_percentage = min(
+            tailored_resume_percentage,
+            100
+        )
+
+        # -----------------------------------
+        # OPTIMIZATION IMPACT SCORE
+        # -----------------------------------
+
+        optimization_impact_score = 40
+
+        optimization_impact_score += (
+            total_generated * 4
+        )
+
+        optimization_impact_score += (
+            unique_roles_targeted * 3
+        )
+
+        optimization_impact_score += (
+            unique_companies_targeted * 2
+        )
+
+        optimization_impact_score = min(
+            optimization_impact_score,
+            100
+        )
+
+        # -----------------------------------
+        # CAREER MOMENTUM
+        # -----------------------------------
+
+        recent_activity = (
+            generated_resumes.filter(
+                created_at__gte=now - timedelta(days=30)
+            ).count()
+        )
+
+        if recent_activity >= 15:
+
+            career_momentum = "Excellent"
+
+        elif recent_activity >= 8:
+
+            career_momentum = "High"
+
+        elif recent_activity >= 3:
+
+            career_momentum = "Growing"
+
+        else:
+
+            career_momentum = "Starting"
+
+        # -----------------------------------
+        # APPLICATION READINESS
+        # -----------------------------------
+
+        if optimization_impact_score >= 85:
+
+            application_readiness = "Strong"
+
+        elif optimization_impact_score >= 70:
+
+            application_readiness = "Good"
+
+        elif optimization_impact_score >= 50:
+
+            application_readiness = "Developing"
+
+        else:
+
+            application_readiness = "Early Stage"
+
+        # -----------------------------------
+        # RESPONSE
+        # -----------------------------------
+
+        return Response({
+
+            "total_generated":
+                total_generated,
+
+            "most_targeted_role":
+                most_targeted_role,
+
+            "most_targeted_company":
+                most_targeted_company,
+
+            "unique_roles_targeted":
+                unique_roles_targeted,
+
+            "unique_companies_targeted":
+                unique_companies_targeted,
+
+            "monthly_generation_count":
+                monthly_generation_count,
+
+            "tailored_resume_percentage":
+                tailored_resume_percentage,
+
+            "optimization_impact_score":
+                optimization_impact_score,
+
+            "career_momentum":
+                career_momentum,
+
+            "application_readiness":
+                application_readiness
+        })
