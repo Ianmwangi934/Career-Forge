@@ -200,6 +200,12 @@ class GenerateResumeView(APIView):
                     "pdf_url": pdf_url
                 })
 
+            # Fallback safety response
+            return Response({
+                "error": "Unexpected AI response",
+                "details": ai_output
+            }, status=400)
+
         except Exception as e:
 
             import traceback

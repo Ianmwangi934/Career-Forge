@@ -43,7 +43,9 @@ STRICT INSTRUCTIONS
 
 4. DO NOT fabricate experience:
    - Only enhance what exists
-   - Keep everything realistic
+   - Keep everything realistic 
+
+
 
 5. Industry alignment:
    - Adapt wording to match the company's industry
@@ -54,13 +56,85 @@ STRICT INSTRUCTIONS
    - Skills
    - Experience
 
-7. If critical domain experience is missing:
-Return:
+7. Before generating the final resume, carefully compare the ORIGINAL RESUME against the JOB DETAILS.
+
+If important information is missing, unclear, weak, or insufficient for tailoring the resume effectively, you may ask follow-up clarification questions.
+
+The questions must be:
+- Dynamic
+- Specific to the job
+- Based on gaps between the resume and the target role
+- Helpful for improving resume personalization
+- Human-like and professional
+
+You may ask about:
+- Relevant experience
+- Technologies
+- Tools
+- Certifications
+- Industry exposure
+- Leadership
+- Project impact
+- Metrics/results
+- Team collaboration
+- Domain familiarity
+- Responsibilities
+- Soft skills relevant to the role
+
+IMPORTANT QUESTION RULES:
+- EVERY question MUST include EXACTLY 4 answer options
+- Options MUST be short
+- Options MUST be relevant to the question
+- Options MUST help personalize the resume
+- NEVER return a question without options
+- NEVER return more than 4 options
+- NEVER return fewer than 4 options
+- Questions must support quick user selection
+- DO NOT ask open-ended questions
+- DO NOT require typed responses
+
+You may ask MULTIPLE questions if necessary.
+
+Return STRICTLY VALID JSON in this exact format:
+
 {{
   "type": "questions",
-  "question": "Do you have experience in [domain]?",
-  "options": ["Yes", "No", "Familiar", "Willing to learn"]
+  "questions": [
+    {{
+      "question": "Specific dynamic question here",
+      "options": [
+        "Option 1",
+        "Option 2",
+        "Option 3",
+        "Option 4"
+      ]
+    }}
+  ]
 }}
+
+EXAMPLE:
+
+{{
+  "type": "questions",
+  "questions": [
+    {{
+      "question": "How experienced are you with financial forecasting and budgeting?",
+      "options": [
+        "Advanced",
+        "Intermediate",
+        "Basic",
+        "No experience"
+      ]
+    }}
+  ]
+}}
+
+IMPORTANT:
+- Questions must NOT be generic
+- Questions must NOT repeat unnecessarily
+- Questions must directly improve resume quality for the target role
+- Only ask questions if truly necessary
+- Otherwise generate the final optimized resume
 
 8. Otherwise return STRICTLY VALID JSON in this exact format:
 
@@ -401,7 +475,7 @@ Do not include explanations.
             }
         ],
         temperature=0.1,
-        max_tokens=300
+        max_tokens=800
     )
 
     raw = response.choices[0].message.content.strip()
