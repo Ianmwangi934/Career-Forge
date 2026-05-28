@@ -18,6 +18,7 @@ const JobTargetForm = () => {
     const [generatedResume, setGeneratedResume] = useState(null)
     const [resumes, setResumes] = useState([]);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+    const [resumeImprovements, setResumeImprovements] = useState([])
 
     const [loading, setLoading] = useState(false)
     // You must have a resume selected
@@ -111,6 +112,10 @@ const JobTargetForm = () => {
 
             setGeneratedResume(aiRes.data)
 
+            setResumeImprovements(
+                aiRes.data.improvements || []
+            )
+
             setShowSuccessAlert(true)
 
         }
@@ -202,6 +207,9 @@ const JobTargetForm = () => {
                     setAiQuestions(null)
 
                     setGeneratedResume(data)
+                    setResumeImprovements(
+                        data.improvements || []
+                    )
 
                     setShowSuccessAlert(true)
                 }}
@@ -221,18 +229,56 @@ const JobTargetForm = () => {
                             </div>
 
                             <h2>
-                                Resume Generated Successfully
+                                Resume Optimized Successfully
                             </h2>
 
-                            <p>
-                                Your AI-optimized resume is ready.
+                            <p className="alert-subtext">
+                                AI improved your resume for this role.
                             </p>
 
+                            {
+                                resumeImprovements.length > 0 && (
+
+                                    <div className="improvement-section">
+
+                                        <h3>
+                                            Improvements Made
+                                        </h3>
+
+                                        <ul className="improvement-list">
+
+                                            {
+                                                resumeImprovements.map((item, index) => (
+
+                                                    <li key={index} className="improvement-item">
+
+                                                        <div className="improvement-title">
+                                                            ✨ {item.title}
+                                                        </div>
+
+                                                        <div className="improvement-description">
+                                                            {item.description}
+                                                        </div>
+
+                                                    </li>
+
+                                                ))
+                                            }
+
+                                        </ul>
+
+                                    </div>
+
+                                )
+                            }
+
                             <button
-                                onClick={() => setShowSuccessAlert(false)}
+                                onClick={() =>
+                                    setShowSuccessAlert(false)
+                                }
                                 className="alert-btn"
                             >
-                                OK
+                                View Resume
                             </button>
 
                         </div>

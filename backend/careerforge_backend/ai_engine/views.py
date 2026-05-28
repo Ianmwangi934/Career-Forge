@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from resumes.models import Resume
 import json
 
-from .utils import extract_text_from_pdf, analyze_resume_with_ai
+from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements
 from .grok_client import (
     generate_resume_with_groq,
     analyze_resume_for_questions
@@ -188,6 +188,13 @@ class GenerateResumeView(APIView):
 
                 resume_data = ai_output.get("content")
 
+                #Resume Improvements Summary
+                improvements = generate_resume_improvements(
+                    resume_text,
+                    json.dumps(resume_data),
+                    job
+                )
+
                 pdf_url = generate_resume_pdf(
                     generated,
                     resume_data
@@ -197,7 +204,8 @@ class GenerateResumeView(APIView):
                     "type": "resume",
                     "message": "Resume generated",
                     "generated_id": generated.id,
-                    "pdf_url": pdf_url
+                    "pdf_url": pdf_url,
+                    "improvements": improvements.get("improvements", [])
                 })
 
             # Fallback safety response
@@ -345,6 +353,12 @@ ORIGINAL RESUME:
                 )
 
                 resume_data = ai_output.get("content")
+                #Improvments made from base resume to generated resume
+                improvements = generate_resume_improvements(
+                    resume_text,
+                    json.dumps(resume_data),
+                    job
+                )
 
                 pdf_url = generate_resume_pdf(
                     generated,
@@ -355,7 +369,8 @@ ORIGINAL RESUME:
                     "type": "resume",
                     "message": "Resume generated successfully",
                     "generated_id": generated.id,
-                    "pdf_url": pdf_url
+                    "pdf_url": pdf_url,
+                    "improvements": improvements.get("improvements", [])
                 })
             
 
