@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import GenerateResumeView, AnswerAIQuestionView, career_news, resume_insights, DeleteGeneratedResumeView, DeleteAllGeneratedResumesView,ResumeAnalyticsView
+from .views import GenerateResumeView, AnswerAIQuestionView, career_news, resume_insights, DeleteGeneratedResumeView, DeleteAllGeneratedResumesView,ResumeAnalyticsView, GenerateApplicationEmailView
 
 urlpatterns = [
     path("generate/" ,GenerateResumeView.as_view()),
@@ -8,5 +8,6 @@ urlpatterns = [
     path("resume-insights/",resume_insights),
     path("generated-resumes/<int:resume_id>/delete/", DeleteGeneratedResumeView.as_view()),
     path("generated-resumes/delete-all/", DeleteAllGeneratedResumesView.as_view()),
-    path("resume-analytics/", ResumeAnalyticsView.as_view())
+    path("resume-analytics/", ResumeAnalyticsView.as_view()),
+    path("generate-email/",GenerateApplicationEmailView.as_view())
 ]

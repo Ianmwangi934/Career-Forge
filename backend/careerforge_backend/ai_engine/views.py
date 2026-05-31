@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from resumes.models import Resume
 import json
 
-from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements
+from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements, generate_application_email
 from .grok_client import (
     generate_resume_with_groq,
     analyze_resume_for_questions
@@ -204,6 +204,7 @@ class GenerateResumeView(APIView):
                     "type": "resume",
                     "message": "Resume generated",
                     "generated_id": generated.id,
+                    "job_id": job.id,
                     "pdf_url": pdf_url,
                     "improvements": improvements.get("improvements", [])
                 })
@@ -369,6 +370,7 @@ ORIGINAL RESUME:
                     "type": "resume",
                     "message": "Resume generated successfully",
                     "generated_id": generated.id,
+                    "job_id": job.id,
                     "pdf_url": pdf_url,
                     "improvements": improvements.get("improvements", [])
                 })
@@ -717,3 +719,43 @@ class ResumeAnalyticsView(APIView):
             "application_readiness":
                 application_readiness
         })
+
+class GenerateApplicationEmailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        try:
+
+            job_id = request.data.get("job_id")
+            resume_id = request.data.get("resume_id")
+
+            resume = Resume.objects.get(
+                id=resume_id,
+                user=request.user
+            )
+
+            job = JobApplication.objects.get(
+                id=job_id,
+                user=request.user
+            )
+
+            resume_text = extract_text_from_pdf(
+                resume.file.path
+            )
+
+            email_data = generate_application_email(
+                resume_text,
+                job
+            )
+
+            return Response(email_data)
+
+        except Exception as e:
+
+            return Response(
+                {"error": str(e)},
+                status=500
+            )
+
+

@@ -190,3 +190,142 @@ Return ONLY valid JSON.
                 }
             ]
         }
+
+#Generating application emails for users
+def generate_application_email(
+    resume_text,
+    job_data
+):
+
+    prompt = f"""
+You are an experienced recruiter and hiring manager.
+
+Generate a REALISTIC job application email that a candidate would actually send.
+
+==================================================
+TARGET JOB
+==================================================
+
+Title:
+{job_data.title}
+
+Company:
+{job_data.company}
+
+Description:
+{job_data.description}
+
+Responsibilities:
+{job_data.responsibilities}
+
+Skills:
+{job_data.skills}
+
+==================================================
+CANDIDATE RESUME
+==================================================
+
+{resume_text}
+
+==================================================
+GOAL
+==================================================
+
+Create a short job application email that feels:
+
+- Human
+- Natural
+- Friendly
+- Professional
+- Genuine
+
+The email should NOT sound like AI.
+
+The email should NOT sound like a cover letter.
+
+The email should NOT use overly formal language.
+
+==================================================
+EMAIL GUIDELINES
+==================================================
+
+The email should:
+
+- Mention the position being applied for
+- Briefly reference relevant experience or skills
+- Show genuine interest in the opportunity
+- Mention that the resume is attached
+- Thank the recruiter for their time
+
+The email should read like something a real applicant
+would type before attaching their resume.
+
+==================================================
+AVOID
+==================================================
+
+Do NOT use phrases like:
+
+- "I am writing to express my interest..."
+- "Please find attached..."
+- "To whom it may concern..."
+- "I believe I would be a valuable asset..."
+- "I am excited to submit my application..."
+- Generic corporate language
+- Buzzword-heavy wording
+
+==================================================
+STYLE
+==================================================
+
+- Conversational
+- Professional
+- Authentic
+- Confident but not arrogant
+- Under 150 words
+
+==================================================
+RETURN JSON ONLY
+==================================================
+
+{{
+    "subject": "",
+    "email_body": ""
+}}
+"""
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.7
+    )
+
+    content = (
+        response
+        .choices[0]
+        .message
+        .content
+        .strip()
+    )
+
+    if content.startswith("```json"):
+        content = (
+            content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
+
+    elif content.startswith("```"):
+        content = (
+            content
+            .replace("```", "")
+            .strip()
+        )
+
+    return json.loads(content)

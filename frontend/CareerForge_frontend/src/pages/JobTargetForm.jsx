@@ -19,6 +19,8 @@ const JobTargetForm = () => {
     const [resumes, setResumes] = useState([]);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false)
     const [resumeImprovements, setResumeImprovements] = useState([])
+    const [emailData, setEmailData] = useState(null)
+    const [emailLoading, setEmailLoading] = useState(false)
 
     const [loading, setLoading] = useState(false)
     // You must have a resume selected
@@ -140,7 +142,43 @@ const JobTargetForm = () => {
         setLoading(false)
 
     }
+
+    
 }
+
+    const generateEmail = async () => {
+
+        try {
+
+            setEmailLoading(true)
+
+            const res = await axios.post(
+                "http://localhost:8000/ai_engine/generate-email/",
+                {
+                    job_id: generatedResume.job_id,
+                    resume_id: resumes[0]?.id
+                },
+                {
+                    withCredentials: true
+                }
+            )
+
+            setEmailData(res.data)
+
+        } catch (err) {
+
+            console.error(err)
+
+            alert(
+                "Failed to generate email."
+            )
+
+        } finally {
+
+            setEmailLoading(false)
+
+        }
+    }
 
     return (
         <div className="job-form-container">
@@ -272,14 +310,30 @@ const JobTargetForm = () => {
                                 )
                             }
 
-                            <button
-                                onClick={() =>
-                                    setShowSuccessAlert(false)
-                                }
-                                className="alert-btn"
-                            >
-                                View Resume
-                            </button>
+                            <div className="alert-actions">
+
+                                <button
+                                    className="alert-btn"
+                                    onClick={() =>
+                                        setShowSuccessAlert(false)
+                                    }
+                                >
+                                    View Resume
+                                </button>
+
+                                <button
+                                    className="email-btn"
+                                    onClick={generateEmail}
+                                    disabled={emailLoading}
+                                >
+                                    {
+                                        emailLoading
+                                            ? "Generating..."
+                                            : "Generate Email"
+                                    }
+                                </button>
+
+                            </div>
 
                         </div>
 
@@ -347,6 +401,70 @@ const JobTargetForm = () => {
                                 </Document>
 
                             </div>
+
+                        </div>
+
+                    </div>
+
+                )
+            }
+
+            {
+                emailData && (
+
+                    <div className="email-overlay">
+
+                        <div className="email-modal">
+
+                            <button
+                                className="close-email"
+                                onClick={() =>
+                                    setEmailData(null)
+                                }
+                            >
+                                ×
+                            </button>
+
+                            <h2>
+                                Application Email
+                            </h2>
+
+                            <div className="email-subject">
+
+                                <strong>
+                                    Subject:
+                                </strong>
+
+                                {emailData.subject}
+
+                            </div>
+
+                            <textarea
+                                readOnly
+                                value={
+                                    emailData.email_body
+                                }
+                            />
+
+                            <button
+                                className="copy-btn"
+                                title="Copy email to clipboard"
+                                onClick={() => {
+
+                                    navigator.clipboard.writeText(
+                                        `Subject: ${emailData.subject}
+
+            ${emailData.email_body}`
+                                    )
+
+                                    alert(
+                                        "✓ Email copied successfully"
+                                    )
+
+                                }}
+                            >
+                                Copy Email
+                            </button>
 
                         </div>
 

@@ -156,14 +156,14 @@ const ResumeManager = () => {
                 {/* 🔥 NEW ACTIONS */}
                 <div className="resume-actions">
 
-                  <a
+                 <a
                     href={`http://localhost:8000${resume.file}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="view-btn"
                   >
                     View
-                  </a>
+                  </a> 
 
                   <a
                     href={`http://localhost:8000${resume.file}`}

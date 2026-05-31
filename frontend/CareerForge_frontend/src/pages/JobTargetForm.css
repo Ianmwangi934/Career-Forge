@@ -454,3 +454,251 @@
 
     font-size: 14px;
 }
+
+
+
+/* ==========================
+   EMAIL MODAL
+========================== */
+
+.email-overlay {
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(2, 6, 23, 0.82);
+
+    backdrop-filter: blur(8px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 3000;
+
+    padding: 20px;
+}
+
+.email-modal {
+
+    position: relative;
+
+    width: 100%;
+    max-width: 750px;
+
+    background: #111827;
+
+    border-radius: 24px;
+
+    padding: 30px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,0.45);
+
+    animation: emailPop 0.3s ease;
+}
+
+.email-modal h2 {
+
+    color: #f8fafc;
+
+    margin-bottom: 20px;
+
+    font-size: 26px;
+}
+
+/* Close button */
+
+.close-email {
+
+    position: absolute;
+
+    top: 14px;
+    right: 16px;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background: rgba(255,255,255,0.08);
+
+    color: white;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.close-email:hover {
+
+    background: rgba(239,68,68,0.2);
+
+    color: #ef4444;
+
+    transform: rotate(90deg);
+}
+
+/* Subject */
+
+.email-subject {
+
+    background: rgba(56,189,248,0.08);
+
+    border: 1px solid rgba(56,189,248,0.15);
+
+    padding: 16px;
+
+    border-radius: 14px;
+
+    color: #e2e8f0;
+
+    margin-bottom: 20px;
+
+    line-height: 1.5;
+}
+
+.email-subject strong {
+
+    color: #38bdf8;
+
+    margin-right: 8px;
+}
+
+/* Email body */
+
+.email-modal textarea {
+
+    width: 100%;
+
+    min-height: 320px;
+
+    resize: none;
+
+    background: #020617;
+
+    color: #e2e8f0;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    margin-bottom: 20px;
+}
+
+.email-modal textarea:focus {
+
+    outline: none;
+
+    border-color: #38bdf8;
+}
+
+/* Copy button */
+
+.copy-btn {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #10b981;
+
+    color: white;
+
+    font-weight: 700;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.copy-btn:hover {
+
+    background: #059669;
+
+    transform: translateY(-2px);
+}
+
+/* Alert action buttons */
+
+.alert-actions {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.alert-actions button {
+
+    flex: 1;
+}
+
+.email-btn {
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #10b981;
+
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+
+    padding: 14px;
+}
+
+.email-btn:hover {
+
+    background: #059669;
+
+    transform: translateY(-2px);
+}
+
+.email-btn:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+/* Animation */
+
+@keyframes emailPop {
+
+    from {
+
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to {
+
+        opacity: 1;
+        transform: scale(1);
+    }
+} 
