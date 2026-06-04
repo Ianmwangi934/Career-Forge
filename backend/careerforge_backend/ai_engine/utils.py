@@ -329,3 +329,95 @@ RETURN JSON ONLY
         )
 
     return json.loads(content)
+
+
+def generate_interview_prep(resume_text,job):
+
+
+    prompt = f"""
+You are an expert technical recruiter and interview coach.
+
+Analyze:
+
+RESUME:
+{resume_text}
+
+JOB TITLE:
+{job.title}
+
+COMPANY:
+{job.company}
+
+DESCRIPTION:
+{job.description}
+
+RESPONSIBILITIES:
+{job.responsibilities}
+
+SKILLS:
+{job.skills}
+
+Generate interview preparation advice.
+
+Return JSON only:
+
+{{
+    "difficulty": "",
+    "focus_areas": [],
+    "likely_questions": [],
+    "behavioral_questions": [],
+    "weak_areas": [],
+    "tips": []
+}}
+
+Rules:
+
+- Questions must be specific to this job
+- Questions must reflect the candidate's resume
+- Questions must reflect missing skills
+- Do not generate generic interview advice
+- Do not generate answers
+- Keep questions realistic
+"""
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.4
+    )
+
+    content = (
+        response
+        .choices[0]
+        .message
+        .content
+        .strip()
+    )
+
+    print("========== INTERVIEW PREP RAW ==========")
+    print(content)
+
+    if content.startswith("```json"):
+        content = (
+            content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
+
+    elif content.startswith("```"):
+        content = (
+            content
+            .replace("```", "")
+            .strip()
+        )
+
+    print("========== CLEANED CONTENT ==========")
+    print(content)
+
+    return json.loads(content)

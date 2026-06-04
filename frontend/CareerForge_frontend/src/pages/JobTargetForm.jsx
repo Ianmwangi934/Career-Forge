@@ -21,6 +21,8 @@ const JobTargetForm = () => {
     const [resumeImprovements, setResumeImprovements] = useState([])
     const [emailData, setEmailData] = useState(null)
     const [emailLoading, setEmailLoading] = useState(false)
+    const [interviewPrep, setInterviewPrep] = useState(null)
+    const [prepLoading, setPrepLoading] = useState(false)
 
     const [loading, setLoading] = useState(false)
     // You must have a resume selected
@@ -177,6 +179,32 @@ const JobTargetForm = () => {
 
             setEmailLoading(false)
 
+        }
+    }
+
+    const generateInterviewPrep = async () => {
+        try {
+
+            setPrepLoading(true)
+
+            const res = await axios.post(
+                "http://localhost:8000/ai_engine/interview-prep/",
+                {
+                    generated_resume_id:generatedResume.generated_id
+                },
+                {
+                    withCredentials:true
+                }
+            )
+            setInterviewPrep(res.data)
+        } catch (err) {
+            console.error(err)
+            alert(
+            "Failed to generate interview preparation."
+        )
+
+        } finally {
+            setPrepLoading(false)
         }
     }
 
@@ -379,6 +407,18 @@ const JobTargetForm = () => {
                                     Download PDF
                                 </a>
 
+                                <button
+                                    className="interview-btn"
+                                    onClick={generateInterviewPrep}
+                                    disabled={prepLoading}
+                                >
+                                    {
+                                        prepLoading
+                                            ? "Preparing..."
+                                            : "Prepare For Interview"
+                                    }
+                                </button>
+
                             </div>
 
                             <div className="generated-preview">
@@ -465,6 +505,139 @@ const JobTargetForm = () => {
                             >
                                 Copy Email
                             </button>
+
+                        </div>
+
+                    </div>
+
+                )
+            }
+
+            {
+                interviewPrep && (
+
+                    <div className="interview-overlay">
+
+                        <div className="interview-modal">
+
+                            <button
+                                className="close-interview"
+                                onClick={() =>
+                                    setInterviewPrep(null)
+                                }
+                            >
+                                ×
+                            </button>
+
+                            <h2>
+                                Interview Preparation
+                            </h2>
+
+                            <div className="difficulty-badge">
+                                Difficulty:
+                                {" "}
+                                {interviewPrep.difficulty}
+                            </div>
+
+                            <section>
+
+                                <h3>
+                                    Focus Areas
+                                </h3>
+
+                                <ul>
+                                    {
+                                        interviewPrep.focus_areas?.map(
+                                            (item, index) => (
+                                                <li key={index}>
+                                                    {item}
+                                                </li>
+                                            )
+                                        )
+                                    }
+                                </ul>
+
+                            </section>
+
+                            <section>
+
+                                <h3>
+                                    Likely Questions
+                                </h3>
+
+                                <ul>
+                                    {
+                                        interviewPrep.likely_questions?.map(
+                                            (item, index) => (
+                                                <li key={index}>
+                                                    {item}
+                                                </li>
+                                            )
+                                        )
+                                    }
+                                </ul>
+
+                            </section>
+
+                            <section>
+
+                                <h3>
+                                    Behavioral Questions
+                                </h3>
+
+                                <ul>
+                                    {
+                                        interviewPrep.behavioral_questions?.map(
+                                            (item, index) => (
+                                                <li key={index}>
+                                                    {item}
+                                                </li>
+                                            )
+                                        )
+                                    }
+                                </ul>
+
+                            </section>
+
+                            <section>
+
+                                <h3>
+                                    Weak Areas
+                                </h3>
+
+                                <ul>
+                                    {
+                                        interviewPrep.weak_areas?.map(
+                                            (item, index) => (
+                                                <li key={index}>
+                                                    {item}
+                                                </li>
+                                            )
+                                        )
+                                    }
+                                </ul>
+
+                            </section>
+
+                            <section>
+
+                                <h3>
+                                    AI Tips
+                                </h3>
+
+                                <ul>
+                                    {
+                                        interviewPrep.tips?.map(
+                                            (item, index) => (
+                                                <li key={index}>
+                                                    {item}
+                                                </li>
+                                            )
+                                        )
+                                    }
+                                </ul>
+
+                            </section>
 
                         </div>
 

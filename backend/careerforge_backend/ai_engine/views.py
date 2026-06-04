@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from resumes.models import Resume
 import json
 
-from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements, generate_application_email
+from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements, generate_application_email, generate_interview_prep
 from .grok_client import (
     generate_resume_with_groq,
     analyze_resume_for_questions
@@ -758,4 +758,77 @@ class GenerateApplicationEmailView(APIView):
                 status=500
             )
 
+class InterviewPrepView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        try:
+
+            generated_resume_id = request.data.get(
+                "generated_resume_id"
+            )
+
+            if not generated_resume_id:
+
+                return Response(
+                    {
+                        "error":
+                        "generated_resume_id is required"
+                    },
+                    status=400
+                )
+
+            generated_resume = (
+                GeneratedResume.objects.get(
+                    id=generated_resume_id,
+                    user=request.user
+                )
+            )
+
+            if not generated_resume.file:
+
+                return Response(
+                    {
+                        "error":
+                        "Generated resume PDF not found"
+                    },
+                    status=400
+                )
+
+            job = generated_resume.job_application
+
+            resume_text = extract_text_from_pdf(
+                generated_resume.file.path
+            )
+
+            prep = generate_interview_prep(
+                resume_text,
+                job
+            )
+
+            return Response(prep)
+
+        except GeneratedResume.DoesNotExist:
+
+            return Response(
+                {
+                    "error":
+                    "Generated resume not found"
+                },
+                status=404
+            )
+
+        except Exception as e:
+
+            import traceback
+
+            traceback.print_exc()
+
+            return Response(
+                {
+                    "error": str(e)
+                },
+                status=500
+            )
 
