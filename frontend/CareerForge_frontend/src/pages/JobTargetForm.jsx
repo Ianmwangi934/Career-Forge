@@ -23,6 +23,9 @@ const JobTargetForm = () => {
     const [emailLoading, setEmailLoading] = useState(false)
     const [interviewPrep, setInterviewPrep] = useState(null)
     const [prepLoading, setPrepLoading] = useState(false)
+    const [mockInterview, setMockInterview] = useState(null)
+    const [answer, setAnswer] = useState("")
+    const [answerLoading, setAnswerLoading] = useState(false)
 
     const [loading, setLoading] = useState(false)
     // You must have a resume selected
@@ -205,6 +208,88 @@ const JobTargetForm = () => {
 
         } finally {
             setPrepLoading(false)
+        }
+    }
+
+    const startMockInterview = async () => {
+
+        try {
+
+            const res = await axios.post(
+                "http://localhost:8000/ai_engine/mock-interview/start/",
+                {
+                    generated_resume_id:
+                        generatedResume.generated_id
+                },
+                {
+                    withCredentials: true
+                }
+            )
+
+            setMockInterview({
+                sessionId: res.data.session_id,
+                question: res.data.question,
+                category: res.data.category,
+                feedback: null
+            })
+
+        } catch (err) {
+
+            console.error(err)
+
+            alert(
+                "Failed to start interview."
+            )
+        }
+    }
+
+    const submitInterviewAnswer = async () => {
+
+        if (!answer.trim()) {
+
+            alert("Enter an answer.")
+            return
+        }
+
+        try {
+
+            setAnswerLoading(true)
+
+            const res = await axios.post(
+                "http://localhost:8000/ai_engine/mock-interview/answer/",
+                {
+                    session_id:
+                        mockInterview.sessionId,
+
+                    answer
+                },
+                {
+                    withCredentials: true
+                }
+            )
+
+            setMockInterview({
+
+                ...mockInterview,
+
+                feedback: res.data,
+
+                question:
+                    res.data.next_question,
+
+                category:
+                    res.data.category
+            })
+
+            setAnswer("")
+
+        } catch (err) {
+
+            console.error(err)
+
+        } finally {
+
+            setAnswerLoading(false)
         }
     }
 
@@ -638,6 +723,138 @@ const JobTargetForm = () => {
                                 </ul>
 
                             </section>
+                            <button
+                                className="mock-interview-btn"
+                                onClick={startMockInterview}
+                            >
+                                🎤 Start Mock Interview
+                            </button>
+
+                        </div>
+                        
+
+                    </div>
+
+                )
+               
+            }
+
+            {
+                mockInterview && (
+
+                    <div className="mock-overlay">
+
+                        <div className="mock-modal">
+
+                            <button
+                                className="close-mock"
+                                onClick={() =>
+                                    setMockInterview(null)
+                                }
+                            >
+                                ×
+                            </button>
+
+                            <h2>
+                                Mock Interview
+                            </h2>
+
+                            <div className="question-category">
+
+                                {mockInterview.category}
+
+                            </div>
+
+                            <div className="question-box">
+
+                                {mockInterview.question}
+
+                            </div>
+
+                            <textarea
+                                className="mock-answer"
+                                placeholder="Type your answer..."
+                                value={answer}
+                                onChange={(e) =>
+                                    setAnswer(
+                                        e.target.value
+                                    )
+                                }
+                            />
+
+                            <button
+                                className="submit-answer-btn"
+                                onClick={submitInterviewAnswer}
+                                disabled={answerLoading}
+                            >
+                                {
+                                    answerLoading
+                                    ? "Evaluating..."
+                                    : "Submit Answer"
+                                }
+                            </button>
+
+                            {
+                                mockInterview.feedback && (
+
+                                    <div className="feedback-panel">
+
+                                        <h3>
+                                            AI Feedback
+                                        </h3>
+
+                                        <div className="score-row">
+
+                                            <div>
+                                                Overall:
+                                                {" "}
+                                                {mockInterview.feedback.score}/100
+                                            </div>
+
+                                            <div>
+                                                Communication:
+                                                {" "}
+                                                {
+                                                    mockInterview.feedback.communication_score
+                                                }/100
+                                            </div>
+
+                                            <div>
+                                                Technical:
+                                                {" "}
+                                                {
+                                                    mockInterview.feedback.technical_score
+                                                }/100
+                                            </div>
+
+                                        </div>
+
+                                        <div className="feedback-box">
+
+                                            {
+                                                mockInterview.feedback.feedback
+                                            }
+
+                                        </div>
+
+                                        <div className="ideal-answer">
+
+                                            <h4>
+                                                Ideal Answer
+                                            </h4>
+
+                                            <p>
+                                                {
+                                                    mockInterview.feedback.ideal_answer
+                                                }
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                )
+                            }
 
                         </div>
 

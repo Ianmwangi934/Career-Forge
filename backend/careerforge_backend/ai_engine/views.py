@@ -10,7 +10,7 @@ from datetime import timedelta
 
 from resumes.models import Resume
 from job_applications.models import JobApplication, GeneratedResume
-from .models import AIQuestionSession
+from .models import AIQuestionSession, MockInterviewSession, MockInterviewMessage
 from .models import AIQuestion
 from .services.pdf_generator import generate_resume_pdf
 from django.conf import settings
@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from resumes.models import Resume
 import json
 
-from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements, generate_application_email, generate_interview_prep
+from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements, generate_application_email, generate_interview_prep, generate_first_interview_question, evaluate_interview_answer
 from .grok_client import (
     generate_resume_with_groq,
     analyze_resume_for_questions
@@ -832,3 +832,181 @@ class InterviewPrepView(APIView):
                 status=500
             )
 
+class StartMockInterviewView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        try:
+
+            generated_resume_id = request.data.get(
+                "generated_resume_id"
+            )
+
+            generated_resume = (
+                GeneratedResume.objects.get(
+                    id=generated_resume_id,
+                    user=request.user
+                )
+            )
+
+            resume_text = extract_text_from_pdf(
+                generated_resume.file.path
+            )
+
+            question_data = (
+                generate_first_interview_question(
+                    resume_text,
+                    generated_resume.job_application
+                )
+            )
+
+            session = (
+                MockInterviewSession.objects.create(
+                    user=request.user,
+                    generated_resume=generated_resume,
+                    current_question=
+                        question_data["question"],
+                    current_category=
+                        question_data["category"]
+                )
+            )
+
+            return Response({
+
+                "session_id":
+                    session.id,
+
+                "question":
+                    question_data["question"],
+
+                "category":
+                    question_data["category"]
+
+            })
+
+        except Exception as e:
+
+            return Response(
+                {
+                    "error": str(e)
+                },
+                status=500
+            )
+
+class AnswerMockInterviewView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        try:
+
+            session_id = request.data.get(
+                "session_id"
+            )
+
+            answer = request.data.get(
+                "answer"
+            )
+
+            session = (
+                MockInterviewSession.objects.get(
+                    id=session_id,
+                    user=request.user
+                )
+            )
+
+            generated_resume = (
+                session.generated_resume
+            )
+
+            resume_text = extract_text_from_pdf(
+                generated_resume.file.path
+            )
+
+            result = evaluate_interview_answer(
+                question=session.current_question,
+                category=session.current_category,
+                answer=answer,
+                resume_text=resume_text,
+                job=generated_resume.job_application
+            )
+
+            MockInterviewMessage.objects.create(
+                session=session,
+                question=session.current_question,
+                category=session.current_category,
+                answer=answer,
+                score=result["score"],
+                technical_score=result["technical_score"],
+                communication_score=result["communication_score"],
+                confidence_score=result["confidence_score"],
+                feedback=result["feedback"],
+                ideal_answer=result["ideal_answer"]
+            )
+
+            session.total_score += (
+                result["score"]
+            )
+
+            session.questions_answered += 1
+
+            session.current_question = (
+                result["next_question"]
+            )
+
+            session.current_category = (
+                result["next_category"]
+            )
+
+            session.save()
+
+            average_score = (
+                session.total_score /
+                session.questions_answered
+            )
+
+            return Response({
+
+                "score":
+                    result["score"],
+
+                "technical_score":
+                    result["technical_score"],
+
+                "communication_score":
+                    result["communication_score"],
+
+                "confidence_score":
+                    result["confidence_score"],
+
+                "feedback":
+                    result["feedback"],
+
+                "ideal_answer":
+                    result["ideal_answer"],
+
+                "next_question":
+                    result["next_question"],
+
+                "next_category":
+                    result["next_category"],
+
+                "average_score":
+                    round(
+                        average_score,
+                        1
+                    )
+
+            })
+
+        except Exception as e:
+
+            return Response(
+                {
+                    "error": str(e)
+                },
+                status=500
+            )

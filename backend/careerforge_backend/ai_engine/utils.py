@@ -417,7 +417,184 @@ Rules:
             .strip()
         )
 
-    print("========== CLEANED CONTENT ==========")
-    print(content)
+    #print("========== CLEANED CONTENT ==========")
+    #print(content)
+
+    return json.loads(content)
+
+
+def generate_first_interview_question(resume_text,job):
+    prompt = f"""
+    You are an expert interviewer.
+
+    You are interviewing a candidate for:
+
+    TITLE:
+    {job.title}
+
+    COMPANY:
+    {job.company}
+
+    DESCRIPTION:
+    {job.description}
+
+    RESPONSIBILITIES:
+    {job.responsibilities}
+
+    SKILLS:
+    {job.skills}
+
+    TAILORED RESUME:
+    {resume_text}
+
+    TASK:
+
+    Generate the BEST first interview question.
+
+    The question should be based on:
+
+    - candidate resume
+    - target role
+    - candidate projects
+    - candidate experience
+
+    Do NOT ask generic questions.
+
+    Return JSON only:
+
+    {{
+        "question": "",
+        "category": ""
+    }}
+
+    Possible categories:
+
+    technical
+    behavioral
+    system_design
+    project_deep_dive
+    problem_solving
+    leadership
+    communication
+    """
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.4
+    )
+
+    content = response.choices[0].message.content.strip()
+
+    if content.startswith("```json"):
+        content = (
+            content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
+
+    elif content.startswith("```"):
+        content = (
+            content
+            .replace("```", "")
+            .strip()
+        )
+    
+
+    return json.loads(content)
+
+
+def evaluate_interview_answer(
+    question,
+    category,
+    answer,
+    resume_text,
+    job
+):
+    prompt = f"""
+You are a brutally honest senior interviewer.
+
+JOB TITLE:
+{job.title}
+
+COMPANY:
+{job.company}
+
+DESCRIPTION:
+{job.description}
+
+SKILLS:
+{job.skills}
+
+RESUME:
+{resume_text}
+
+QUESTION:
+{question}
+
+CATEGORY:
+{category}
+
+CANDIDATE ANSWER:
+{answer}
+
+TASK:
+
+1. Score the answer.
+2. Critique it honestly.
+3. Evaluate:
+   - technical accuracy
+   - communication
+   - confidence
+4. Provide an ideal answer.
+5. Generate the next interview question.
+
+Return JSON only:
+
+{{
+    "score": 0,
+    "technical_score": 0,
+    "communication_score": 0,
+    "confidence_score": 0,
+    "feedback": "",
+    "ideal_answer": "",
+    "next_question": "",
+    "next_category": ""
+}}
+"""
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.4
+    )
+
+    content = response.choices[0].message.content.strip()
+
+    if content.startswith("```json"):
+        content = (
+            content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
+
+    elif content.startswith("```"):
+        content = (
+            content
+            .replace("```", "")
+            .strip()
+        )
 
     return json.loads(content)
