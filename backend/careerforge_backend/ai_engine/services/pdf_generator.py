@@ -1,6 +1,7 @@
 from weasyprint import HTML
 from django.template.loader import render_to_string
 from django.core.files.base import ContentFile
+import uuid
 
 
 def generate_resume_pdf(generated_resume, context):
@@ -14,9 +15,12 @@ def generate_resume_pdf(generated_resume, context):
         string=html_string
     ).write_pdf()
 
+    filename = f"{uuid.uuid4()}.pdf"
+
     generated_resume.file.save(
-        f"resume_{generated_resume.id}.pdf",
+        filename,
         ContentFile(pdf_file)
     )
 
-    return generated_resume.file.url 
+    return generated_resume.file.url
+     
