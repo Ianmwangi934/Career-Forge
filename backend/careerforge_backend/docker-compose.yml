@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:17
+    container_name: careerforge-db
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    
+  backend:
+    build:
+      context: .
+
+    container_name: careerforge-backend
+
+    working_dir: /app 
+
+    command: gunicorn careerforge_backend.wsgi:application --bind 0.0.0.0:8000
+
+    volumes:
+      - .:/app
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - db
+
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+
+  frontend:
+    build:
+      context: ../../frontend/CareerForge_frontend
+
+    container_name: careerforge-frontend
+
+    ports:
+      - "5174:5173"
+
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
