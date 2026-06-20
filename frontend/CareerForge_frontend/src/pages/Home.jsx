@@ -1,49 +1,63 @@
-import "./Home.css"
-import { useNavigate } from "react-router-dom"
+import "./Home.css";
+import { useNavigate } from "react-router-dom";
 
-import heroImage from "../assets/careerforge-hero.png"
+import heroImage from "../assets/careerforge-hero.png";
 
 const Home = () => {
-
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     return (
         <div className="home-container">
-            <h1 className="head">CareerForge ✨</h1>
 
             <div className="home-wrapper">
 
                 {/* LEFT SIDE */}
-                <div className="home-card">
+                <div className="home-content">
 
                     <h1 className="logo">
                         CareerForge
                     </h1>
 
-                    <p className="tagline">
-                        Shaping your career intentionally.
+                    <h2 className="hero-title">
+                        Build stronger applications with AI.
+                    </h2>
+
+                    <p className="hero-description">
+                        CareerForge helps professionals tailor resumes,
+                        prepare for interviews, generate application materials,
+                        and organize their job search from a single platform.
                     </p>
 
-                    <p className="subtitle">
-                        AI-powered resume tailoring,
-                        cover letters, and interview prep —
-                        all in one place.
-                    </p>
+                    <div className="feature-list">
+
+                        <div className="feature-item">
+                            Resume Tailoring
+                        </div>
+
+                        <div className="feature-item">
+                            Interview Preparation
+                        </div>
+
+                        <div className="feature-item">
+                            Application Tracking
+                        </div>
+
+                    </div>
 
                     <div className="buttons">
 
                         <button
-                            onClick={() => navigate("/login")}
+                            onClick={() => navigate("/register")}
                             className="btn primary"
                         >
-                            Login
+                            Get Started
                         </button>
 
                         <button
-                            onClick={() => navigate("/register")}
+                            onClick={() => navigate("/login")}
                             className="btn secondary"
                         >
-                            Register
+                            Sign In
                         </button>
 
                     </div>
@@ -51,11 +65,12 @@ const Home = () => {
                 </div>
 
                 {/* RIGHT SIDE */}
+
                 <div className="home-image-container">
 
                     <img
                         src={heroImage}
-                        alt="CareerForge Hero"
+                        alt="CareerForge Dashboard"
                         className="home-image"
                     />
 
@@ -64,7 +79,7 @@ const Home = () => {
             </div>
 
         </div>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;

@@ -69,7 +69,7 @@ const ResumeInsights = () => {
                     <div className="insight-content">
 
                         <h3>
-                            ✅ Strengths
+                            Strengths
                         </h3>
 
                         <ul>
@@ -101,7 +101,7 @@ const ResumeInsights = () => {
                     <div className="insight-content">
 
                         <h3>
-                            ⚠ Missing Skills
+                             Missing Skills
                         </h3>
 
                         <ul>
@@ -133,7 +133,7 @@ const ResumeInsights = () => {
                     <div className="insight-content">
 
                         <h3>
-                            📈 Market Trends
+                             Market Trends
                         </h3>
 
                         <ul>
@@ -165,7 +165,7 @@ const ResumeInsights = () => {
                     <div className="insight-content">
 
                         <h3>
-                            🧠 Recommendations
+                             Recommendations
                         </h3>
 
                         <ul>

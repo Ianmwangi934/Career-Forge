@@ -376,7 +376,7 @@ const JobTargetForm = () => {
                         <div className="custom-alert">
 
                             <div className="success-icon">
-                                🚀
+                                
                             </div>
 
                             <h2>
@@ -404,7 +404,7 @@ const JobTargetForm = () => {
                                                     <li key={index} className="improvement-item">
 
                                                         <div className="improvement-title">
-                                                            ✨ {item.title}
+                                                             {item.title}
                                                         </div>
 
                                                         <div className="improvement-description">
@@ -583,7 +583,7 @@ const JobTargetForm = () => {
                                     )
 
                                     alert(
-                                        "✓ Email copied successfully"
+                                        " Email copied successfully"
                                     )
 
                                 }}
@@ -727,7 +727,7 @@ const JobTargetForm = () => {
                                 className="mock-interview-btn"
                                 onClick={startMockInterview}
                             >
-                                🎤 Start Mock Interview
+                                 Start Mock Interview
                             </button>
 
                         </div>

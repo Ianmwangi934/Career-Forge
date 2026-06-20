@@ -52,7 +52,7 @@ const Dashboard = () => {
             className={`nav-item ${activeSection === "dashboard" ? "active" : ""}`}
             onClick={() => setActiveSection("dashboard")}
           >
-            Dashboard
+            Home
           </button>
 
           <button
@@ -92,7 +92,7 @@ const Dashboard = () => {
         {/* HEADER */}
         <div className="topbar">
           <h1>
-            Welcome back{user ? `, ${user.username}` : ""} 👋
+            Welcome back{user ? `, ${user.username}` : ""} 
           </h1>
         </div>
 
@@ -102,16 +102,17 @@ const Dashboard = () => {
           {activeSection === "dashboard" && (
             <>
               <div className="intro-card">
-                <h2>Shape your career intentionally</h2>
+                <h2>Career Overview</h2>
                 <p>
-                  CareerForge helps you tailor your career strategy with precision — 
-                  from optimized resumes to interview mastery.
+                  Manage resumes, prepare for interviews,
+                  track applications, and stay informed
+                  about industry trends.
                 </p>
               </div>
 
               <div className="cards">
                 <div className="card">
-                  <h3>📄 Resumes</h3>
+                  <h3> Resumes</h3>
                   <p>Upload and tailor resumes for each job.</p>
                   <button onClick={() => setActiveSection("resumes")}>
                     Manage Resumes
@@ -119,13 +120,13 @@ const Dashboard = () => {
                 </div>
 
                 <div className="card">
-                  <h3>📊 Applications</h3>
+                  <h3> Applications</h3>
                   <p>Track your job applications and progress.</p>
                   <button onClick={() => setActiveSection("applications")}>View Applications</button>
                 </div>
 
                 <div className="card">
-                  <h3>🧠 AI Tools</h3>
+                  <h3> AI Tools</h3>
                   <p>Generate resumes, cover letters, and prep.</p>
                   <button onClick={() => setActiveSection("ai")}>Use AI</button>
                 </div>
@@ -135,7 +136,7 @@ const Dashboard = () => {
               <div className="career-news-section">
 
                   <h2 className="career-news-title">
-                    Career Insights & Market Trends
+                    Career News
                   </h2>
 
                   <div className="news-slider">

@@ -34,10 +34,13 @@ const Login = () => {
     return (
         <div className="auth-container">
       <div className="auth-card">
+        <div className="auth-brand">
+            CareerForge
+        </div>
 
-        <h1 className="auth-title">Welcome Back</h1>
+        <h1 className="auth-title">Sign In</h1>
         <p className="auth-subtitle">
-          Login to continue building your career intentionally
+          Access your CareerForge workspace.
         </p>
 
         <form onSubmit={handleSubmit} className="auth-form">

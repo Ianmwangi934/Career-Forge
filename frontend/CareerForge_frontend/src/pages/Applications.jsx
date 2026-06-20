@@ -164,49 +164,31 @@ const Applications = () => {
                     <div className="analytics-section">
 
                         <div className="analytics-card">
-                           <div className="analytics-icon">
-                             📄
-                            </div>
                             <h3>Total Generated</h3>
                             <p>{analytics.total_generated}</p>
                         </div>
 
                         <div className="analytics-card">
-                            <div className="analytics-icon">
-                                🎯
-                             </div>
                             <h3>Most Targeted Role</h3>
                             <p>{analytics.most_targeted_role}</p>
                         </div>
 
                         <div className="analytics-card">
-                            <div className="analytics-icon">
-                              🏢
-                             </div>
                             <h3>Most Targeted Company</h3>
                             <p>{analytics.most_targeted_company}</p>
                         </div>
 
                         <div className="analytics-card">
-                            <div className="analytics-icon">
-                                📈
-                            </div>
                             <h3>This Month</h3>
                             <p>{analytics.monthly_generation_count}</p>
                         </div>
 
                         <div className="analytics-card">
-                            <div className="analytics-icon">
-                                🚀
-                            </div>
                             <h3>Career Momentum</h3>
                             <p>{analytics.career_momentum}</p>
                         </div>
 
                         <div className="analytics-card">
-                            <div className="analytics-icon">
-                                ⚡
-                            </div>
                             <h3>Tailored Resumes</h3>
                             <p>
                                 {analytics.tailored_resume_percentage}%
