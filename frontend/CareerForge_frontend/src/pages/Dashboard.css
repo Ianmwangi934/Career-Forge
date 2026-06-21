@@ -3,11 +3,13 @@ DASHBOARD LAYOUT
 ========================= */
 
 .dashboard {
-display: flex;
-min-height: 100vh;
-background: #0f172a;
-color: #f8fafc;
-font-family: Inter, system-ui, sans-serif;
+  display: flex;
+  min-height: 100vh;
+
+  background: #111827;
+  color: #f8fafc;
+
+  font-family: Inter, system-ui, sans-serif;
 }
 
 /* =========================
@@ -16,8 +18,11 @@ SIDEBAR
 
 .sidebar {
   width: 240px;
-  background: #111827;
+
+  background: #0b1120;
+
   border-right: 1px solid #1f2937;
+
   padding: 24px;
 
   display: flex;
@@ -25,10 +30,12 @@ SIDEBAR
 }
 
 .logo {
-font-size: 18px;
-font-weight: 700;
-color: #38bdf8;
-margin-bottom: 32px;
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #38bdf8;
+
+  margin-bottom: 32px;
 }
 
 /* =========================
@@ -36,32 +43,46 @@ NAVIGATION
 ========================= */
 
 .nav {
-display: flex;
-flex-direction: column;
-gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .nav-item {
-height: 42px;
-border: none;
-background: transparent;
-color: #cbd5e1;
-text-align: left;
-padding: 0 12px;
-border-radius: 8px;
-cursor: pointer;
-font-size: 14px;
-transition: background 0.2s ease;
+  height: 42px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #cbd5e1;
+
+  text-align: left;
+
+  padding: 0 14px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .nav-item:hover {
-background: #1e293b;
+  background: #1e293b;
 }
 
 .nav-item.active {
-background: #38bdf8;
-color: #0f172a;
-font-weight: 600;
+  background: #38bdf8;
+
+  color: #0f172a;
+
+  font-weight: 600;
 }
 
 /* =========================
@@ -71,22 +92,28 @@ SIDEBAR FOOTER
 .sidebar-footer {
   margin-top: auto;
 
-  font-size: 14px;
+  padding-top: 20px;
+
+  border-top: 1px solid #1f2937;
+
   color: #94a3b8;
 
-  padding-top: 20px;
-  border-top: 1px solid #1f2937;
+  font-size: 14px;
 }
 
 /* =========================
-MAIN CONTENT
+MAIN
 ========================= */
 
 .main {
-flex: 1;
-display: flex;
-flex-direction: column;
-overflow: hidden;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #111827;
+
+  overflow: hidden;
 }
 
 /* =========================
@@ -94,14 +121,18 @@ TOPBAR
 ========================= */
 
 .topbar {
-padding: 24px 32px;
-border-bottom: 1px solid #1f2937;
+  padding: 24px 32px;
+
+  background: #111827;
+
+  border-bottom: 1px solid #1f2937;
 }
 
 .topbar h1 {
-font-size: 24px;
-font-weight: 700;
-color: #f8fafc;
+  font-size: 24px;
+  font-weight: 700;
+
+  color: #f8fafc;
 }
 
 /* =========================
@@ -109,9 +140,11 @@ CONTENT
 ========================= */
 
 .content {
-flex: 1;
-overflow-y: auto;
-padding: 32px;
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 32px;
 }
 
 /* =========================
@@ -119,22 +152,29 @@ INTRO CARD
 ========================= */
 
 .intro-card {
-background: #111827;
-border: 1px solid #1f2937;
-border-radius: 12px;
-padding: 24px;
-margin-bottom: 24px;
+  background: #1f2937;
+
+  border: 1px solid #374151;
+
+  border-radius: 12px;
+
+  padding: 24px;
+
+  margin-bottom: 24px;
 }
 
 .intro-card h2 {
-font-size: 20px;
-font-weight: 700;
-margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 700;
+
+  margin-bottom: 12px;
+  color: white;
 }
 
 .intro-card p {
-color: #94a3b8;
-line-height: 1.7;
+  color: #94a3b8;
+
+  line-height: 1.7;
 }
 
 /* =========================
@@ -142,110 +182,172 @@ FEATURE CARDS
 ========================= */
 
 .cards {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-gap: 20px;
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(260px, 1fr));
+
+  gap: 20px;
 }
 
 .card {
-background: #111827;
-border: 1px solid #1f2937;
-border-radius: 12px;
-padding: 20px;
+  background: #1f2937;
+
+  border: 1px solid #374151;
+
+  border-radius: 12px;
+
+  padding: 20px;
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.card:hover {
+  border-color: #38bdf8;
+
+  transform: translateY(-2px);
 }
 
 .card h3 {
-font-size: 18px;
-font-weight: 600;
-margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 600;
+
+  margin-bottom: 12px;
+
+  color: #f8fafc;
 }
 
 .card p {
-color: #94a3b8;
-line-height: 1.6;
-margin-bottom: 16px;
+  color: #94a3b8;
+
+  line-height: 1.6;
+
+  margin-bottom: 16px;
 }
 
 .card button {
-height: 38px;
-padding: 0 14px;
-border: none;
-border-radius: 8px;
-background: #38bdf8;
-color: #0f172a;
-font-size: 14px;
-font-weight: 600;
-cursor: pointer;
-transition: background 0.2s ease;
+  height: 38px;
+
+  padding: 0 14px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #38bdf8;
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
 }
 
 .card button:hover {
-background: #0ea5e9;
+  background: #0ea5e9;
 }
 
-/* CAREER NEWS SECTION */
+/* =========================
+CAREER NEWS
+========================= */
+
 .career-news-section {
   margin-top: 50px;
 }
 
 .career-news-title {
   font-size: 24px;
-  margin-bottom: 24px;
+  font-weight: 700;
+
   color: #f8fafc;
+
+  margin-bottom: 24px;
 }
 
-/* SLIDER */
+/* =========================
+SLIDER
+========================= */
+
 .news-slider {
   width: 100%;
-  overflow: hidden;
-  position: relative;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding-bottom: 10px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #38bdf8 #1f2937;
 }
 
+/* Chrome / Edge */
 
+.news-slider::-webkit-scrollbar {
+  height: 8px;
+}
 
+.news-slider::-webkit-scrollbar-track {
+  background: #1f2937;
+}
 
-/* CARD */
+.news-slider::-webkit-scrollbar-thumb {
+  background: #38bdf8;
+  border-radius: 999px;
+}
+
+/* =========================
+TRACK
+========================= */
+
+.news-track {
+  display: flex;
+
+  gap: 24px;
+
+  width: max-content;
+}
+
+/* =========================
+NEWS CARD
+========================= */
+
 .news-card {
-
   min-width: 340px;
   max-width: 340px;
 
-  background: #0f172a;
+  background: #1f2937;
 
-  border:
-    1px solid rgba(255,255,255,0.06);
+  border: 1px solid #374151;
 
-  border-radius: 20px;
+  border-radius: 16px;
 
   overflow: hidden;
 
   text-decoration: none;
 
   transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.25);
+    transform 0.25s ease,
+    border-color 0.25s ease;
 
   flex-shrink: 0;
 }
 
 .news-card:hover {
+  border-color: #38bdf8;
 
-  transform: translateY(-8px);
-
-  border-color:
-    rgba(56,189,248,0.45);
-
-  box-shadow:
-    0 18px 40px rgba(0,0,0,0.4);
+  transform: translateY(-3px);
 }
 
-/* IMAGE */
-.news-card img {
+/* =========================
+NEWS IMAGE
+========================= */
 
+.news-card img {
   width: 100%;
   height: 190px;
 
@@ -254,13 +356,15 @@ background: #0ea5e9;
   display: block;
 }
 
-/* CONTENT */
+/* =========================
+NEWS CONTENT
+========================= */
+
 .news-content {
   padding: 18px;
 }
 
 .news-source {
-
   display: inline-block;
 
   font-size: 12px;
@@ -272,11 +376,11 @@ background: #0ea5e9;
 }
 
 .news-content h3 {
+  font-size: 17px;
 
-  font-size: 18px;
   line-height: 1.5;
 
-  color: white;
+  color: #f8fafc;
 
   margin-bottom: 12px;
 
@@ -284,8 +388,8 @@ background: #0ea5e9;
 }
 
 .news-content p {
-
   font-size: 14px;
+
   line-height: 1.7;
 
   color: #94a3b8;
@@ -297,37 +401,48 @@ background: #0ea5e9;
   -webkit-line-clamp: 3;
 }
 
-/* SLIDER */
-.news-slider {
-  width: 100%;
+/* =========================
+RESPONSIVE
+========================= */
 
-  overflow-x: auto;
-  overflow-y: hidden;
+@media (max-width: 900px) {
 
-  padding-bottom: 10px;
+  .dashboard {
+    flex-direction: column;
+  }
 
-  scrollbar-width: thin;
-  scrollbar-color: #38bdf8 #0f172a;
+  .sidebar {
+    width: 100%;
+
+    border-right: none;
+    border-bottom: 1px solid #1f2937;
+  }
+
+  .content {
+    padding: 24px;
+  }
 }
 
-/* Chrome / Edge */
-.news-slider::-webkit-scrollbar {
-  height: 8px;
-}
+@media (max-width: 600px) {
 
-.news-slider::-webkit-scrollbar-track {
-  background: #0f172a;
-}
+  .topbar {
+    padding: 20px;
+  }
 
-.news-slider::-webkit-scrollbar-thumb {
-  background: #38bdf8;
-  border-radius: 999px;
-}
+  .content {
+    padding: 20px;
+  }
 
-/* TRACK */
-.news-track {
-  display: flex;
-  gap: 24px;
+  .cards {
+    grid-template-columns: 1fr;
+  }
 
-  width: max-content;
+  .topbar h1 {
+    font-size: 20px;
+  }
+
+  .news-card {
+    min-width: 300px;
+    max-width: 300px;
+  }
 }

@@ -1,7 +1,7 @@
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
-import heroImage from "../assets/careerforge-hero.png";
+import heroImage from "../assets/Career.png";
 
 const Home = () => {
     const navigate = useNavigate();
