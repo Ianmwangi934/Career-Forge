@@ -32,7 +32,6 @@
             font-size: 10px;
             color: #444;
             margin-bottom: 3px;
-            word-break: break-word;
         }
 
         .section {
@@ -101,6 +100,9 @@
             font-weight: bold;
             color: #111827;
         }
+        .no-wrap {
+            white-space: nowrap;
+        }
 
     </style>
 
@@ -144,7 +146,8 @@
             {% endif %}
 
             {% if portfolio %}
-                | Portfolio: {{ portfolio }}
+                | Portfolio: 
+                <span class="no-wrap">{{ portfolio }}</span>
             {% endif %}
 
         </div>

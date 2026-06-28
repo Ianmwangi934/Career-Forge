@@ -16,7 +16,29 @@ def extract_text_from_pdf(file_path):
 def analyze_resume_with_ai(resume_text):
 
     prompt = f"""
-    Analyze this resume professionally.
+    You are a professional resume reviewer and ATS analyst.
+
+Your task is to carefully analyze the ENTIRE resume provided below.
+
+IMPORTANT RULES:
+
+1. Read EVERY section of the resume from beginning to end.
+2. Read every word, sentence, bullet point, project description, certification, technology stack, skill list, education section, and work experience section.
+3. Before generating your response, build an internal list of ALL skills, technologies, tools, programming languages, frameworks, cloud platforms, databases, methodologies, and certifications explicitly mentioned anywhere in the resume.
+4. NEVER classify a skill as missing if it appears anywhere in the resume.
+5. A skill is considered "missing" ONLY if:
+
+   * It does NOT appear anywhere in the resume.
+   * It is highly relevant to the candidate's target career path based on their existing skills and experience.
+6. Do not infer that a skill is missing simply because it is not emphasized enough.
+7. Do not recommend a skill that already exists in the resume.
+8. Strengths must be supported by evidence found directly in the resume.
+9. Recommendations must be actionable and based on actual gaps or improvement opportunities.
+10. Market trends should focus on skills and technologies currently in demand that are NOT already present in the resume.
+
+
+
+
 
     Resume:
     {resume_text}
@@ -39,7 +61,7 @@ def analyze_resume_with_ai(resume_text):
                 "content": prompt
             }
         ],
-        temperature=0.7,
+        temperature=0.2,
     )
 
     content = response.choices[0].message.content.strip()
