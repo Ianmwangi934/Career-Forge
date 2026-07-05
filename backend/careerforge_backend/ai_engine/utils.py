@@ -2,6 +2,7 @@ import fitz
 from django.conf import settings
 from groq import Groq
 import json
+import re
 client = Groq(api_key=settings.GROQ_API_KEY)
 
 def extract_text_from_pdf(file_path):
@@ -410,7 +411,7 @@ Rules:
                 "content": prompt
             }
         ],
-        temperature=0.4
+        temperature=0.1
     )
 
     content = (
@@ -424,25 +425,51 @@ Rules:
     print("========== INTERVIEW PREP RAW ==========")
     print(content)
 
-    if content.startswith("```json"):
-        content = (
-            content
-            .replace("```json", "")
-            .replace("```", "")
-            .strip()
-        )
+    # Extract the first JSON object from the response
+    match = re.search(r"\{.*\}", content, re.DOTALL)
 
-    elif content.startswith("```"):
-        content = (
-            content
-            .replace("```", "")
-            .strip()
-        )
+    if match:
+        content = match.group(0)
+
+    try:
+        return json.loads(content)
+
+    except json.JSONDecodeError:
+        print("Invalid JSON returned by model:")
+        print(content)
+
+        return {
+            "difficulty": "Unknown",
+            "focus_areas": [],
+            "likely_questions": [],
+            "behavioral_questions": [],
+            "weak_areas": [],
+            "tips": [
+                "AI failed to generate interview preparation."
+            ]
+        }
 
     #print("========== CLEANED CONTENT ==========")
     #print(content)
 
-    return json.loads(content)
+    try:
+        return json.loads(content)
+
+    except json.JSONDecodeError:
+
+        print("Invalid JSON returned by model:")
+        print(content)
+
+        return {
+            "difficulty": "Unknown",
+            "focus_areas": [],
+            "likely_questions": [],
+            "behavioral_questions": [],
+            "weak_areas": [],
+            "tips": [
+                "AI failed to generate interview preparation."
+            ]
+        }
 
 
 def generate_first_interview_question(resume_text,job):
