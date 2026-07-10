@@ -315,6 +315,6 @@ helping users build long-term career influence.
 
 *Ian Murigu*
 
-Full-Stack Developer | Cybersecurity Enthusiast
+Full-Stack Engineer | Cybersecurity Enthusiast
 
 CareerForge demonstrates modern full-stack engineering, AI integration, secure system design, and containerized deployment for production-ready SaaS applications.
