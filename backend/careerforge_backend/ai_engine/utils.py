@@ -3,7 +3,10 @@ from django.conf import settings
 from groq import Groq
 import json
 import re
+from google.genai import types
+from google import genai
 client = Groq(api_key=settings.GROQ_API_KEY)
+gemini_client= genai.Client(api_key=settings.GEMINI_API_KEY)
 
 def extract_text_from_pdf(file_path):
     text = ""
@@ -55,7 +58,7 @@ IMPORTANT RULES:
     """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {
                 "role": "user",
@@ -179,19 +182,17 @@ Return STRICT JSON ONLY:
 Return ONLY valid JSON.
 """
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0.3,
-        max_tokens=600
+    response = gemini_client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            temperature=0.2,
+            max_output_tokens=8000,
+            response_mime_type="application/json",
+        ),
     )
 
-    raw = response.choices[0].message.content.strip()
+    raw = response.text
 
     # Remove markdown wrappers
     if raw.startswith("```json"):
@@ -318,7 +319,7 @@ RETURN JSON ONLY
 """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {
                 "role": "user",
@@ -404,7 +405,7 @@ Rules:
 """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {
                 "role": "user",
@@ -452,24 +453,7 @@ Rules:
     #print("========== CLEANED CONTENT ==========")
     #print(content)
 
-    try:
-        return json.loads(content)
-
-    except json.JSONDecodeError:
-
-        print("Invalid JSON returned by model:")
-        print(content)
-
-        return {
-            "difficulty": "Unknown",
-            "focus_areas": [],
-            "likely_questions": [],
-            "behavioral_questions": [],
-            "weak_areas": [],
-            "tips": [
-                "AI failed to generate interview preparation."
-            ]
-        }
+    
 
 
 def generate_first_interview_question(resume_text,job):
@@ -528,7 +512,7 @@ def generate_first_interview_question(resume_text,job):
     """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {
                 "role": "user",
@@ -619,7 +603,7 @@ Return JSON only:
 """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {
                 "role": "user",

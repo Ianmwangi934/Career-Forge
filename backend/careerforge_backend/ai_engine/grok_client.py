@@ -1,12 +1,16 @@
 from django.conf import settings
 from groq import Groq
+from google import genai
+from google.genai import types
 import json
 
 
 client = Groq(api_key=settings.GROQ_API_KEY)
+gemini_client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
 def generate_resume_with_groq(resume_text, job_data):
     prompt = f"""
+
     You are a professional resume optimizer and ATS expert.
 
 =====================
@@ -245,16 +249,21 @@ FINAL REQUIREMENT
 ==================================================
 
 Output STRICTLY VALID JSON ONLY.
+
 """
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.5,
-        max_tokens=2000,
+    response = gemini_client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            temperature=0.2,
+            max_output_tokens=8000,
+            response_mime_type="application/json",
+        ),
     )
 
-    raw = response.choices[0].message.content.strip()
+    #raw = response.choices[0].message.content.strip()
+    raw = response.text.strip()
 
     # Remove markdown wrappers
     if raw.startswith("```json"):
@@ -265,6 +274,7 @@ Output STRICTLY VALID JSON ONLY.
 
     try:
         return json.loads(raw)
+        print(json.loads(raw))
 
     except json.JSONDecodeError:
 
@@ -466,19 +476,18 @@ Return STRICT JSON ONLY.
 Do not include explanations.
 """
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0.1,
-        max_tokens=800
+    response = gemini_client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            temperature=0.2,
+            max_output_tokens=8000,
+            response_mime_type="application/json",
+        ),
     )
 
-    raw = response.choices[0].message.content.strip()
+    #raw = response.choices[0].message.content.strip()
+    raw = response.text.strip()
 
     # Remove markdown wrappers
     if raw.startswith("```json"):

@@ -18,6 +18,7 @@ from decouple import config
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -101,9 +102,20 @@ REST_FRAMEWORK = {
         'accounts.authentication.CookieJWTAuthentication',
     ),
 }
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+SIMPLE_JWT ={
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60)
 }
+ #{
+    #'ACCESS_TOFile "/usr/local/lib/python3.12/ssl.py", line 1105, in read
+#careerforge-backend   |     return self._sslobj.read(len)
+#careerforge-backend   |            ^^^^^^^^^^^^^^^^^^^^^^
+#careerforge-backend   |   File "/usr/local/lib/python3.12/site-packages/gunicorn/workers/base.py", line 198, in handle_abort
+#careerforge-backend   |     sys.exit(1)
+#careerforge-backend   | SystemExit: 1
+#careerforge-backend   | [2026-07-09 10:46:51 +0000] [7] [INFO] Worker exiting (pid: 7)
+#careerforge-backend   | [2026-07-09 10:46:52 +0000] [90] [INFO] Booting worker with pid: 90
+#careerforge-backend   | [2026-07-09 10:46:52 +0000] [1] [INFO] Control socket listening at /root/.gunicorn/gunicorn.ctlKEN_LIFETIME': timedelta(minutes=60),
+#}
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]

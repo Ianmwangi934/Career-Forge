@@ -76,7 +76,7 @@ class GenerateResumeView(APIView):
             )
 
             print("Analysis complete")
-            print(analysis)
+            #print(analysis)
 
             # QUESTIONS
             if analysis.get("type") == "questions":
@@ -439,6 +439,8 @@ def resume_insights(request):
     data = analyze_resume_with_ai(
         resume_text
     )
+    print("Returned from AI:", data)
+    print(type(data))
 
     return Response(data)
 
