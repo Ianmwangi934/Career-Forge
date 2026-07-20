@@ -1,0 +1,89 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:17
+    container_name: careerforge-db
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+
+    container_name: careerforge-backend
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    expose:
+      - "8000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    volumes:
+      - static_data:/app/staticfiles
+      - media_data:/app/media
+
+    command: >
+      gunicorn careerforge_backend.wsgi:application
+      --bind 0.0.0.0:8000
+      --workers 3
+      --threads 2
+      --timeout 180
+
+  frontend:
+    build:
+      context: ./frontend/CareerForge_frontend
+      dockerfile: Dockerfile.prod
+
+    container_name: careerforge-frontend
+
+    restart: unless-stopped
+
+    expose:
+      - "80"
+
+    depends_on:
+      - backend
+
+  nginx:
+    build:
+      context: ./nginx
+
+    container_name: careerforge-nginx
+
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:
+  static_data:
+  media_data:
