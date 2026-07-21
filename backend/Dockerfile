@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     gcc \
     libpq-dev \
+    postgresql-client \
     libglib2.0-0 \
     libcairo2 \
     libpango-1.0-0 \
@@ -39,27 +40,19 @@ RUN pip install --upgrade pip && \
 # -----------------------------
 # Copy project files
 # -----------------------------
+
 COPY . .
 
 # -----------------------------
-# Create a non-root user
+# Copy entrypoint script
 # -----------------------------
+COPY entrypoint.sh /app/entrypoint.sh
+
+RUN chmod +x /app/entrypoint.sh
+
 RUN useradd -m appuser && \
     chown -R appuser:appuser /app
 
 USER appuser
 
-# -----------------------------
-# Expose application port
-# -----------------------------
-EXPOSE 8000
-
-# -----------------------------
-# Start Gunicorn
-# -----------------------------
-CMD ["gunicorn", \
-     "careerforge_backend.wsgi:application", \
-     "--bind", "0.0.0.0:8000", \
-     "--workers", "3", \
-     "--threads", "2", \
-     "--timeout", "180"]
+ENTRYPOINT ["/app/entrypoint.sh"]

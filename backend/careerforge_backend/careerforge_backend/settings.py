@@ -33,7 +33,11 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool, default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1",
+    cast=lambda v: [host.strip() for host in v.split(",")]
+)
 
 
 # Application definition
@@ -123,7 +127,7 @@ AUTHENTICATION_BACKENDS = [
 JWT_COOKIE_NAME = 'access_token'
 JWT_REFRESH_COOKIE_NAME = 'refresh_token'
 
-JWT_COOKIE_SECURE = False  # True in production (HTTPS)
+JWT_COOKIE_SECURE = config("JWT_COOKIE_SECURE", cast=bool, default=not DEBUG)
 JWT_COOKIE_HTTP_ONLY = True
 JWT_COOKIE_SAMESITE = 'Lax'
 CORS_ALLOWED_ORIGINS = [
@@ -132,6 +136,12 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = 'accounts.User'
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default="http://localhost:5173,http://localhost:5174",
+    cast=lambda v: [origin.strip() for origin in v.split(",")]
+)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Password validation
@@ -168,7 +178,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
