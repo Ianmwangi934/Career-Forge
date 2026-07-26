@@ -26,7 +26,7 @@ const Applications = () => {
         try {
 
             const res = await axios.get(
-                "http://localhost:8000/job_applications/generated-resumes/",
+                "http://80.225.78.96/job_applications/generated-resumes/",
                 {
                     withCredentials: true
                 }
@@ -47,7 +47,7 @@ const Applications = () => {
         try {
 
             const res = await axios.get(
-                "http://localhost:8000/ai_engine/resume-analytics/",
+                "http://80.225.78.96/ai_engine/resume-analytics/",
                 {
                     withCredentials: true
                 }
@@ -74,7 +74,7 @@ const Applications = () => {
         try {
 
             await axios.delete(
-                `http://localhost:8000/ai_engine/generated-resumes/${id}/delete/`,
+                `http://80.225.78.96/ai_engine/generated-resumes/${id}/delete/`,
                 {
                     withCredentials: true
                 }
@@ -107,7 +107,7 @@ const Applications = () => {
         try {
 
             await axios.delete(
-                "http://localhost:8000/ai_engine/generated-resumes/delete-all/",
+                "http://80.225.78.96/ai_engine/generated-resumes/delete-all/",
                 {
                     withCredentials: true
                 }
@@ -208,7 +208,7 @@ const Applications = () => {
 
                         const fileUrl = app.file.startsWith("http")
                             ? app.file
-                            : `http://localhost:8000${app.file}`;
+                            : `http://80.225.78.96${app.file}`;
 
                         return (
 

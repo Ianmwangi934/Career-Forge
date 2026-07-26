@@ -16,7 +16,7 @@ const ResumeManager = () => {
     const fetchResumes = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:8000/resumes/",
+                "http://80.225.78.96/resumes/",
                 {withCredentials: true}
             )
             setResumes(res.data)
@@ -46,7 +46,7 @@ const ResumeManager = () => {
         try {
             setLoading(true)
             await axios.post(
-                "http://localhost:8000/resumes/upload/",
+                "http://80.225.78.96/resumes/upload/",
                 formData,
                 {
                     headers: {
@@ -68,7 +68,7 @@ const ResumeManager = () => {
     const handleDelete = async (id) => {
       try {
         await axios.delete(
-          `http://localhost:8000/resumes/${id}/delete/`,
+          `http://80.225.78.96/resumes/${id}/delete/`,
           {withCredentials:true}
         )
         fetchResumes()
@@ -128,7 +128,7 @@ const ResumeManager = () => {
 
                   const fileUrl = resume.file.startsWith("http")
                     ? resume.file
-                    : `http://localhost:8000${resume.file}`
+                    : `http://80.225.78.96${resume.file}`
 
                   if (!fileUrl.endsWith(".pdf")) {
                     return <p>Preview not available</p>
@@ -157,7 +157,7 @@ const ResumeManager = () => {
                 <div className="resume-actions">
 
                  <a
-                    href={`http://localhost:8000${resume.file}`}
+                    href={`http://80.225.78.96${resume.file}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="view-btn"
@@ -166,7 +166,7 @@ const ResumeManager = () => {
                   </a> 
 
                   <a
-                    href={`http://localhost:8000${resume.file}`}
+                    href={`http://80.225.78.96${resume.file}`}
                     download
                     className="download-btn"
                   >

@@ -15,7 +15,7 @@ const Dashboard = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/accounts/me/",
+          "http://80.225.78.96/accounts/me/",
           { withCredentials: true }
         )
         setUser(res.data)
@@ -28,7 +28,7 @@ const Dashboard = () => {
     const fetchCareerNews = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/ai_engine/career-news/"
+          "http://80.225.78.96/ai_engine/career-news/"
         )
 
         setCareerNews(res.data)

@@ -14,7 +14,7 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8000/accounts/login/",
+                "http://80.225.78.96/accounts/login/",
                 {
                     email,
                     password

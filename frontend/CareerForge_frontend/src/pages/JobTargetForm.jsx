@@ -33,7 +33,7 @@ const JobTargetForm = () => {
             const fetchResumes = async () => {
                 try {
                     const res = await axios.get(
-                        "http://localhost:8000/resumes/",
+                        "http://80.225.78.96/resumes/",
                         { withCredentials: true }
                     );
 
@@ -72,7 +72,7 @@ const JobTargetForm = () => {
         // STEP 1:
         // Save Job Application
         const jobRes = await axios.post(
-            "http://localhost:8000/job_applications/",
+            "http://80.225.78.96/job_applications/",
             form,
             {
                 withCredentials: true
@@ -91,7 +91,7 @@ const JobTargetForm = () => {
             return
         }
         const aiRes = await axios.post(
-            "http://localhost:8000/ai_engine/generate/",
+            "http://80.225.78.96/ai_engine/generate/",
             {
                 //resume_id: resumeId,
                 resume_id: resumes[0]?.id,
@@ -158,7 +158,7 @@ const JobTargetForm = () => {
             setEmailLoading(true)
 
             const res = await axios.post(
-                "http://localhost:8000/ai_engine/generate-email/",
+                "http://80.225.78.96/ai_engine/generate-email/",
                 {
                     job_id: generatedResume.job_id,
                     resume_id: resumes[0]?.id
@@ -191,7 +191,7 @@ const JobTargetForm = () => {
             setPrepLoading(true)
 
             const res = await axios.post(
-                "http://localhost:8000/ai_engine/interview-prep/",
+                "http://80.225.78.96/ai_engine/interview-prep/",
                 {
                     generated_resume_id:generatedResume.generated_id
                 },
@@ -216,7 +216,7 @@ const JobTargetForm = () => {
         try {
 
             const res = await axios.post(
-                "http://localhost:8000/ai_engine/mock-interview/start/",
+                "http://80.225.78.96/ai_engine/mock-interview/start/",
                 {
                     generated_resume_id:
                         generatedResume.generated_id
@@ -256,7 +256,7 @@ const JobTargetForm = () => {
             setAnswerLoading(true)
 
             const res = await axios.post(
-                "http://localhost:8000/ai_engine/mock-interview/answer/",
+                "http://80.225.78.96/ai_engine/mock-interview/answer/",
                 {
                     session_id:
                         mockInterview.sessionId,
@@ -476,7 +476,7 @@ const JobTargetForm = () => {
                             <div className="generated-actions">
 
                                 <a
-                                    href={`http://localhost:8000${generatedResume.pdf_url}`}
+                                    href={`http://80.225.78.96${generatedResume.pdf_url}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="view-btn"
@@ -485,7 +485,7 @@ const JobTargetForm = () => {
                                 </a>
 
                                 <a
-                                    href={`http://localhost:8000${generatedResume.pdf_url}`}
+                                    href={`http://80.225.78.96${generatedResume.pdf_url}`}
                                     download
                                     className="download-btn"
                                 >
@@ -509,7 +509,7 @@ const JobTargetForm = () => {
                             <div className="generated-preview">
 
                                 <Document
-                                    file={`http://localhost:8000${generatedResume.pdf_url}`}
+                                    file={`http://80.225.78.96${generatedResume.pdf_url}`}
                                     onLoadError={(err) =>
                                         console.error(
                                             "PDF Preview Error:",

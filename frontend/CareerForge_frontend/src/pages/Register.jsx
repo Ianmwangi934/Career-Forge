@@ -15,7 +15,7 @@ const Register = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8000/accounts/register/",
+                "http://80.225.78.96/accounts/register/",
                 {
                     username,
                     email,
