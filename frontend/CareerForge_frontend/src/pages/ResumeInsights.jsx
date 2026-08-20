@@ -16,7 +16,7 @@ const ResumeInsights = () => {
         const fetchInsights = async () =>{
             try {
                 const res = await axios.get(
-                    "http://80.225.78.96/ai_engine/resume-insights/",
+                    "/ai_engine/resume-insights/",
 
                     {
                         withCredentials: true

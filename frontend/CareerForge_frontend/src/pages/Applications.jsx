@@ -26,7 +26,7 @@ const Applications = () => {
         try {
 
             const res = await axios.get(
-                "http://80.225.78.96/job_applications/generated-resumes/",
+                "/job_applications/generated-resumes/",
                 {
                     withCredentials: true
                 }
@@ -47,7 +47,7 @@ const Applications = () => {
         try {
 
             const res = await axios.get(
-                "http://80.225.78.96/ai_engine/resume-analytics/",
+                "/ai_engine/resume-analytics/",
                 {
                     withCredentials: true
                 }
@@ -74,7 +74,7 @@ const Applications = () => {
         try {
 
             await axios.delete(
-                `http://80.225.78.96/ai_engine/generated-resumes/${id}/delete/`,
+                `/ai_engine/generated-resumes/${id}/delete/`,
                 {
                     withCredentials: true
                 }
@@ -107,7 +107,7 @@ const Applications = () => {
         try {
 
             await axios.delete(
-                "http://80.225.78.96/ai_engine/generated-resumes/delete-all/",
+                "/ai_engine/generated-resumes/delete-all/",
                 {
                     withCredentials: true
                 }

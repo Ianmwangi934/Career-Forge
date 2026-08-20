@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ResumeInsights from "./ResumeInsights";
 import { Document, Page, pdfjs } from "react-pdf";
-import workerSrc from "pdfjs-dist/build/pdf.worker?url";
-pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
 
+pdfjs.GlobalWorkerOptions.workerSrc =
+    `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const ResumeManager = () => {
     const [file, setFile] = useState(null)
@@ -16,7 +16,7 @@ const ResumeManager = () => {
     const fetchResumes = async () => {
         try {
             const res = await axios.get(
-                "http://80.225.78.96/resumes/",
+                "/resumes/",
                 {withCredentials: true}
             )
             setResumes(res.data)
@@ -46,7 +46,7 @@ const ResumeManager = () => {
         try {
             setLoading(true)
             await axios.post(
-                "http://80.225.78.96/resumes/upload/",
+                "/resumes/upload/",
                 formData,
                 {
                     headers: {
@@ -68,7 +68,7 @@ const ResumeManager = () => {
     const handleDelete = async (id) => {
       try {
         await axios.delete(
-          `http://80.225.78.96/resumes/${id}/delete/`,
+          `/resumes/${id}/delete/`,
           {withCredentials:true}
         )
         fetchResumes()
@@ -128,7 +128,7 @@ const ResumeManager = () => {
 
                   const fileUrl = resume.file.startsWith("http")
                     ? resume.file
-                    : `http://80.225.78.96${resume.file}`
+                    : `${resume.file}`
 
                   if (!fileUrl.endsWith(".pdf")) {
                     return <p>Preview not available</p>
@@ -153,11 +153,11 @@ const ResumeManager = () => {
                   {new Date(resume.uploaded_at).toLocaleDateString()}
                 </span>
 
-                {/* 🔥 NEW ACTIONS */}
+                {/*  NEW ACTIONS */}
                 <div className="resume-actions">
 
                  <a
-                    href={`http://80.225.78.96${resume.file}`}
+                    href={`${resume.file}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="view-btn"
@@ -166,7 +166,7 @@ const ResumeManager = () => {
                   </a> 
 
                   <a
-                    href={`http://80.225.78.96${resume.file}`}
+                    href={`${resume.file}`}
                     download
                     className="download-btn"
                   >

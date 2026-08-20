@@ -31,7 +31,7 @@ const AIQuestionCard = ({
       setLoading(true)
 
       const res = await axios.post(
-        "http://80.225.78.96/ai_engine/answer-question/",
+        "/ai_engine/answer-question/",
         {
           session_id: sessionId,
           answers: answers

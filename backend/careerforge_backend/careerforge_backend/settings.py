@@ -58,8 +58,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,19 +128,26 @@ JWT_COOKIE_NAME = 'access_token'
 JWT_REFRESH_COOKIE_NAME = 'refresh_token'
 
 JWT_COOKIE_SECURE = config("JWT_COOKIE_SECURE", cast=bool, default=not DEBUG)
-JWT_COOKIE_HTTP_ONLY = True
+JWT_COOKIE_HTTP_ONLY = False
 JWT_COOKIE_SAMESITE = 'Lax'
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:5174",
+    "https://careerforge.vexlite.dev",
 ]
 CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = 'accounts.User'
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
-    default="http://localhost:5173,http://localhost:5174",
+    default="https://careerforge.vexlite.dev",
     cast=lambda v: [origin.strip() for origin in v.split(",")]
 )
+SECURE_SSL_REDIRECT = True
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
@@ -182,3 +189,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)

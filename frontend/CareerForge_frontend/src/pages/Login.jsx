@@ -14,7 +14,7 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-                "http://80.225.78.96/accounts/login/",
+                "/accounts/login/",
                 {
                     email,
                     password
