@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
     <style>
-
         @page {
             margin: 30px;
         }
@@ -32,6 +32,11 @@
             font-size: 10px;
             color: #444;
             margin-bottom: 3px;
+        }
+
+        .contact-line a {
+            color: #2563eb;
+            text-decoration: none;
         }
 
         .section {
@@ -100,17 +105,19 @@
             font-weight: bold;
             color: #111827;
         }
+
         .no-wrap {
             white-space: nowrap;
         }
-
     </style>
-
 </head>
 
 <body>
 
+    <!-- ========================= -->
     <!-- HEADER -->
+    <!-- ========================= -->
+
     <div class="header">
 
         <div class="name">
@@ -123,39 +130,72 @@
         </div>
         {% endif %}
 
+        <!-- Phone and Email -->
+        {% if phone or email %}
         <div class="contact-line">
 
             {% if phone %}
                 {{ phone }}
             {% endif %}
 
+            {% if phone and email %}
+                |
+            {% endif %}
+
             {% if email %}
-                | {{ email }}
+                {{ email }}
             {% endif %}
 
         </div>
+        {% endif %}
 
+
+        <!-- Professional Links -->
+        {% if linkedin or github or portfolio %}
         <div class="contact-line">
 
             {% if linkedin %}
-                LinkedIn: {{ linkedin }}
+                <a href="{{ linkedin|escape }}">
+                    LinkedIn
+                </a>
             {% endif %}
+
 
             {% if github %}
-                | GitHub: {{ github }}
+
+                {% if linkedin %}
+                    |
+                {% endif %}
+
+                <a href="{{ github|escape }}">
+                    GitHub
+                </a>
+
             {% endif %}
 
+
             {% if portfolio %}
-                | Portfolio: 
-                <span class="no-wrap">{{ portfolio }}</span>
+
+                {% if linkedin or github %}
+                    |
+                {% endif %}
+
+                <a href="{{ portfolio|escape }}">
+                    Portfolio
+                </a>
+
             {% endif %}
 
         </div>
+        {% endif %}
 
     </div>
 
 
-    <!-- SUMMARY -->
+    <!-- ========================= -->
+    <!-- PROFESSIONAL SUMMARY -->
+    <!-- ========================= -->
+
     {% if summary %}
     <div class="section">
 
@@ -171,7 +211,10 @@
     {% endif %}
 
 
+    <!-- ========================= -->
     <!-- EXPERIENCE -->
+    <!-- ========================= -->
+
     {% if experience %}
     <div class="section">
 
@@ -189,24 +232,38 @@
                     {{ exp.position }}
                 </div>
 
+                {% if exp.date %}
                 <div class="date">
                     {{ exp.date }}
                 </div>
-
-            </div>
-
-            <div class="subtitle">
-                {{ exp.company }}
-                {% if exp.location %}
-                    | {{ exp.location }}
                 {% endif %}
+
             </div>
+
+            {% if exp.company or exp.location %}
+            <div class="subtitle">
+
+                {% if exp.company %}
+                    {{ exp.company }}
+                {% endif %}
+
+                {% if exp.company and exp.location %}
+                    |
+                {% endif %}
+
+                {% if exp.location %}
+                    {{ exp.location }}
+                {% endif %}
+
+            </div>
+            {% endif %}
+
 
             {% if exp.bullets %}
             <ul>
 
                 {% for bullet in exp.bullets %}
-                    <li>{{ bullet }}</li>
+                <li>{{ bullet }}</li>
                 {% endfor %}
 
             </ul>
@@ -220,7 +277,10 @@
     {% endif %}
 
 
+    <!-- ========================= -->
     <!-- EDUCATION -->
+    <!-- ========================= -->
+
     {% if education %}
     <div class="section">
 
@@ -238,19 +298,31 @@
                     {{ edu.school }}
                 </div>
 
+                {% if edu.date %}
                 <div class="date">
                     {{ edu.date }}
                 </div>
+                {% endif %}
 
             </div>
 
+            {% if edu.degree or edu.location %}
             <div class="subtitle">
-                {{ edu.degree }}
+
+                {% if edu.degree %}
+                    {{ edu.degree }}
+                {% endif %}
+
+                {% if edu.degree and edu.location %}
+                    |
+                {% endif %}
 
                 {% if edu.location %}
-                    | {{ edu.location }}
+                    {{ edu.location }}
                 {% endif %}
+
             </div>
+            {% endif %}
 
         </div>
 
@@ -260,7 +332,10 @@
     {% endif %}
 
 
+    <!-- ========================= -->
     <!-- PROJECTS -->
+    <!-- ========================= -->
+
     {% if projects %}
     <div class="section">
 
@@ -278,9 +353,11 @@
                     {{ project.name }}
                 </div>
 
+                {% if project.date %}
                 <div class="date">
                     {{ project.date }}
                 </div>
+                {% endif %}
 
             </div>
 
@@ -290,11 +367,12 @@
             </div>
             {% endif %}
 
+
             {% if project.bullets %}
             <ul>
 
                 {% for bullet in project.bullets %}
-                    <li>{{ bullet }}</li>
+                <li>{{ bullet }}</li>
                 {% endfor %}
 
             </ul>
@@ -308,7 +386,10 @@
     {% endif %}
 
 
+    <!-- ========================= -->
     <!-- SKILLS -->
+    <!-- ========================= -->
+
     {% if skills %}
     <div class="section">
 
@@ -320,9 +401,11 @@
 
         <div class="skills-group">
 
+            {% if skill_group.category %}
             <span class="skills-label">
                 {{ skill_group.category }}:
             </span>
+            {% endif %}
 
             {{ skill_group.items|join:", " }}
 
@@ -334,8 +417,11 @@
     {% endif %}
 
 
-    <!-- CERTIFICATIONS -->
-    {% if certifications or Training or Training_and_certifications  %}
+    <!-- ========================= -->
+    <!-- TRAINING & CERTIFICATIONS -->
+    <!-- ========================= -->
+
+    {% if certifications %}
     <div class="section">
 
         <div class="section-title">
@@ -345,7 +431,7 @@
         <ul>
 
             {% for cert in certifications %}
-                <li>{{ cert }}</li>
+            <li>{{ cert }}</li>
             {% endfor %}
 
         </ul>
@@ -354,7 +440,10 @@
     {% endif %}
 
 
+    <!-- ========================= -->
     <!-- LANGUAGES -->
+    <!-- ========================= -->
+
     {% if languages %}
     <div class="section">
 
@@ -365,7 +454,7 @@
         <ul>
 
             {% for language in languages %}
-                <li>{{ language }}</li>
+            <li>{{ language }}</li>
             {% endfor %}
 
         </ul>
@@ -374,4 +463,5 @@
     {% endif %}
 
 </body>
+
 </html>

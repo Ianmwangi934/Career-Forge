@@ -8,6 +8,92 @@ from google import genai
 client = Groq(api_key=settings.GROQ_API_KEY)
 gemini_client= genai.Client(api_key=settings.GEMINI_API_KEY)
 
+def extract_links_from_pdf(file_path):
+    links = {
+        "linkedin": "",
+        "github": "",
+        "portfolio": ""
+    }
+
+    with fitz.open(file_path) as doc:
+        for page in doc:
+            for link in page.get_links():
+
+                uri = link.get("uri")
+
+                if not uri:
+                    continue
+
+                uri = uri.strip()
+                uri_lower = uri.lower()
+
+                # -------------------------------------------------
+                # Ignore email / mailto links
+                # -------------------------------------------------
+                if uri_lower.startswith("mailto:"):
+                    continue
+
+                # -------------------------------------------------
+                # LinkedIn
+                # -------------------------------------------------
+                if "linkedin.com" in uri_lower:
+                    if not links["linkedin"]:
+                        links["linkedin"] = uri
+                    continue
+
+                # -------------------------------------------------
+                # GitHub
+                # -------------------------------------------------
+                if "github.com" in uri_lower:
+                    if not links["github"]:
+                        links["github"] = uri
+                    continue
+
+                # -------------------------------------------------
+                # Try to identify the text associated with the link
+                # -------------------------------------------------
+                rect = link.get("from")
+
+                link_text = ""
+
+                if rect:
+                    try:
+                        text_instances = page.get_text(
+                            "dict",
+                            clip=rect
+                        )
+
+                        for block in text_instances.get("blocks", []):
+                            for line in block.get("lines", []):
+                                for span in line.get("spans", []):
+                                    link_text += span.get("text", "")
+
+                    except Exception:
+                        pass
+
+                link_text_lower = link_text.lower().strip()
+
+                # -------------------------------------------------
+                # Portfolio detection
+                # -------------------------------------------------
+                portfolio_keywords = [
+                    "portfolio",
+                    "personal website",
+                    "personal site",
+                    "website",
+                    "web portfolio",
+                    "my website",
+                    "my portfolio"
+                ]
+
+                if any(
+                    keyword in link_text_lower
+                    for keyword in portfolio_keywords
+                ):
+                    if not links["portfolio"]:
+                        links["portfolio"] = uri
+
+    return links
 def extract_text_from_pdf(file_path):
     text = ""
 
@@ -16,7 +102,6 @@ def extract_text_from_pdf(file_path):
             text +=page.get_text()
 
     return text
-
 def analyze_resume_with_ai(resume_text):
 
     prompt = f"""

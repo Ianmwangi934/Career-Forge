@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from resumes.models import Resume
 import json
 
-from .utils import extract_text_from_pdf, analyze_resume_with_ai, generate_resume_improvements, generate_application_email, generate_interview_prep, generate_first_interview_question, evaluate_interview_answer
+from .utils import extract_text_from_pdf,extract_links_from_pdf, analyze_resume_with_ai, generate_resume_improvements, generate_application_email, generate_interview_prep, generate_first_interview_question, evaluate_interview_answer
 from .grok_client import (
     generate_resume_with_groq,
     analyze_resume_for_questions
@@ -66,8 +66,13 @@ class GenerateResumeView(APIView):
                 resume.file.path
             )
 
+            # Extract original clickable links
+            original_links = extract_links_from_pdf(
+                resume.file.path
+            )
+
             print("PDF extraction successful")
-            #print("Resume text length:", len(resume_text))
+            print("Original PDF links:", original_links)
 
             # Analyze
             analysis = analyze_resume_for_questions(
@@ -76,7 +81,7 @@ class GenerateResumeView(APIView):
             )
 
             print("Analysis complete")
-            #print(analysis)
+            # print(analysis)
 
             # QUESTIONS
             if analysis.get("type") == "questions":
@@ -89,7 +94,7 @@ class GenerateResumeView(APIView):
                     job_application=job
                 )
 
-                #questions_data = analysis.get("questions",[])
+                # questions_data = analysis.get("questions", [])
                 questions_data = analysis.get("questions")
 
                 if not questions_data:
@@ -129,7 +134,7 @@ class GenerateResumeView(APIView):
             # Generate final resume
             ai_output = generate_resume_with_groq(
                 resume_text,
-                job
+                job,
             )
 
             print("Resume generation complete")
@@ -188,7 +193,17 @@ class GenerateResumeView(APIView):
 
                 resume_data = ai_output.get("content")
 
-                #Resume Improvements Summary
+                # Preserve original clickable links
+                if original_links.get("linkedin"):
+                    resume_data["linkedin"] = original_links["linkedin"]
+
+                if original_links.get("github"):
+                    resume_data["github"] = original_links["github"]
+
+                if original_links.get("portfolio"):
+                    resume_data["portfolio"] = original_links["portfolio"]
+
+                # Resume Improvements Summary
                 improvements = generate_resume_improvements(
                     resume_text,
                     json.dumps(resume_data),
@@ -206,7 +221,10 @@ class GenerateResumeView(APIView):
                     "generated_id": generated.id,
                     "job_id": job.id,
                     "pdf_url": pdf_url,
-                    "improvements": improvements.get("improvements", [])
+                    "improvements": improvements.get(
+                        "improvements",
+                        []
+                    )
                 })
 
             # Fallback safety response
@@ -248,7 +266,10 @@ class AnswerAIQuestionView(APIView):
                 user=request.user
             )
 
+            # -------------------------------------------------
             # Save all answers
+            # -------------------------------------------------
+
             for question_id, answer in answers.items():
 
                 print("Processing:", question_id, answer)
@@ -270,7 +291,10 @@ class AnswerAIQuestionView(APIView):
                     print("Question not found:", question_id)
                     continue
 
+            # -------------------------------------------------
             # Check unanswered questions
+            # -------------------------------------------------
+
             unanswered_exists = session.questions.filter(
                 Q(answer__isnull=True) | Q(answer="")
             ).exists()
@@ -284,20 +308,46 @@ class AnswerAIQuestionView(APIView):
                     "waiting_for_more_answers": True
                 })
 
-            # Mark complete
+            # -------------------------------------------------
+            # Mark session complete
+            # -------------------------------------------------
+
             session.completed = True
             session.save()
 
-            # Resume/job
+            # -------------------------------------------------
+            # Get original resume and job
+            # -------------------------------------------------
+
             resume = session.resume
             job = session.job_application
 
-            # Extract text
+            # -------------------------------------------------
+            # Extract original resume text
+            # -------------------------------------------------
+
             resume_text = extract_text_from_pdf(
                 resume.file.path
             )
 
+            # -------------------------------------------------
+            # Extract original clickable links
+            # -------------------------------------------------
+
+            original_links = extract_links_from_pdf(
+                resume.file.path
+            )
+
+            print("========== ORIGINAL PDF LINKS ==========")
+            print("LinkedIn:", original_links.get("linkedin"))
+            print("GitHub:", original_links.get("github"))
+            print("Portfolio:", original_links.get("portfolio"))
+            print("========================================")
+
+            # -------------------------------------------------
             # Build answers text
+            # -------------------------------------------------
+
             all_answers = session.questions.all().order_by("order")
 
             answers_text = ""
@@ -330,20 +380,25 @@ ORIGINAL RESUME:
 
 """
 
-            # Generate resume
+            # -------------------------------------------------
+            # Generate final resume
+            # -------------------------------------------------
+
             ai_output = generate_resume_with_groq(
                 enhanced_context,
                 job
             )
 
-            #print("AI OUTPUT:")
-            #print(ai_output)
             if ai_output.get("type") == "questions":
 
                 return Response({
                     "error": "AI is still asking questions",
                     "details": ai_output
                 }, status=400)
+
+            # -------------------------------------------------
+            # Resume generated
+            # -------------------------------------------------
 
             if ai_output.get("type") == "resume":
 
@@ -353,13 +408,44 @@ ORIGINAL RESUME:
                     job_application=job
                 )
 
-                resume_data = ai_output.get("content")
-                #Improvments made from base resume to generated resume
+                resume_data = ai_output.get("content", {})
+
+                # -------------------------------------------------
+                # IMPORTANT:
+                # Restore URLs from the ORIGINAL uploaded PDF.
+                #
+                # Never rely on the AI-generated values here because
+                # the AI may return "Portfolio", "GitHub", etc.
+                # -------------------------------------------------
+
+                if original_links.get("linkedin"):
+                    resume_data["linkedin"] = original_links["linkedin"]
+
+                if original_links.get("github"):
+                    resume_data["github"] = original_links["github"]
+
+                if original_links.get("portfolio"):
+                    resume_data["portfolio"] = original_links["portfolio"]
+
+                print("========== FINAL RESUME LINKS ==========")
+                print("LinkedIn:", resume_data.get("linkedin"))
+                print("GitHub:", resume_data.get("github"))
+                print("Portfolio:", resume_data.get("portfolio"))
+                print("========================================")
+
+                # -------------------------------------------------
+                # Generate improvements summary
+                # -------------------------------------------------
+
                 improvements = generate_resume_improvements(
                     resume_text,
                     json.dumps(resume_data),
                     job
                 )
+
+                # -------------------------------------------------
+                # Generate PDF
+                # -------------------------------------------------
 
                 pdf_url = generate_resume_pdf(
                     generated,
@@ -372,9 +458,20 @@ ORIGINAL RESUME:
                     "generated_id": generated.id,
                     "job_id": job.id,
                     "pdf_url": pdf_url,
-                    "improvements": improvements.get("improvements", [])
+                    "improvements": improvements.get(
+                        "improvements",
+                        []
+                    )
                 })
-            
+
+            # -------------------------------------------------
+            # Unexpected AI response
+            # -------------------------------------------------
+
+            return Response({
+                "error": "Unexpected AI response",
+                "details": ai_output
+            }, status=400)
 
         except Exception as e:
 
@@ -386,7 +483,6 @@ ORIGINAL RESUME:
             return Response({
                 "error": str(e)
             }, status=500)
-
 
 @api_view(["GET"])
 def career_news(request):
